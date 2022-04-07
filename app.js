@@ -134,5 +134,23 @@ app.put('/api/v1/stories/:id', (req, res) => {
   });
 });
 
+// delete a story (@TODO delete from database later)
+app.delete('/api/v1/stories/:id', (req, res) => {
+  const id = Number(req.params.id);             // convert string to number
+  const story = stories.find(s => s.id === id); // find story having the specified ID
+
+  if(!story) {                                  // if the story is not found return 404
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID'
+    });
+  }
+
+  res.status(204).json({                        // body is empty (no content)
+    status: 'success',                          
+    data: null                                  // delete from db (to be done later)
+  });
+});
+
 // export the application
 module.exports = app;
