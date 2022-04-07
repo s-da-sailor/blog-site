@@ -20,5 +20,43 @@ const express = require('express');
 // express application
 const app = express();
 
+// CRUD Endpoints for Story (@TODO handle this using a separate Router later)
+
+//dummy data for stories
+const stories  = [
+  {
+    id: 0,
+    title: "Dummy Title 1",
+    description: "Dummy Description 1",
+    author: "Dummy author 1",
+    createdAt: Date.now()
+  },
+  {
+    id: 1,
+    title: "Dummy Title 2",
+    description: "Dummy Description 2",
+    author: "Dummy author 2",
+    createdAt: Date.now()
+  },
+  {
+    id: 2,
+    title: "Dummy Title 3",
+    description: "Dummy Description 3",
+    author: "Dummy author 3",
+    createdAt: Date.now()
+  }
+]
+
+// get all stories
+app.get('/api/v1/stories', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    results: stories.length,
+    data: {
+      stories
+    }
+  });
+});
+
 // export the application
 module.exports = app;
