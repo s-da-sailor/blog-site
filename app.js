@@ -20,6 +20,9 @@ const express = require('express');
 // express application
 const app = express();
 
+// middlewares
+app.use(express.json());
+
 // CRUD Endpoints for Story (@TODO handle this using a separate Router later)
 
 //dummy data for stories
@@ -45,17 +48,26 @@ const stories  = [
     author: "Dummy author 3",
     createdAt: Date.now()
   }
-]
+];
 
-// get all stories
+// get all stories (@TODO serve from database later)
 app.get('/api/v1/stories', (req, res) => {
   res.status(200).json({
     status: 'success',
     results: stories.length,
-    data: {
+    data: {   // serve dummy stories array
       stories
     }
   });
+});
+
+// post a new story (@TODO store in database later)
+app.post('/api/v1/stories', (req, res) => {
+  const newId = stories[stories.length - 1].id + 1;         // get newID 
+  const newStory = Object.assign({ id: newId }, req.body);  // dummy story object
+  stories.push(newStory);                                   // pushed in the dummy array
+  console.log(newStory);
+  res.send('Done');
 });
 
 // export the application
