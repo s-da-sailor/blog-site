@@ -154,18 +154,23 @@ const deleteStory = (req, res) => {
   });
 };
 
-// handle routes using story controllers (@TODO use Router and transfer them in a different directory)
-app
-  .route('/api/v1/stories')
+// Story Router (@TODO transfer it in a different directory)
+const storyRouter = express.Router();
+
+// routes (@TODO transfer it in a different directory)
+storyRouter
+  .route('/')
   .get(getAllStories)
   .post(createStory);
 
-app
-  .route('/api/v1/stories/:id')
+storyRouter
+  .route('/:id')
   .get(getStory)
   .patch(updateStoryPatch)
   .put(updateStoryPut)
-  .delete(deleteStory)
+  .delete(deleteStory);
+
+app.use('/api/v1/stories', storyRouter);        // using story Router as a middleware
 
 // export the application
 module.exports = app;
