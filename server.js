@@ -5,7 +5,7 @@
 * Date: 6 April 2022
 */
 
-// dependencies
+// DEPENDENCIES
 const app = require('./app');
 
 // port (@TODO: add this in the environment variables later)
