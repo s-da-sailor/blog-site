@@ -50,8 +50,10 @@ const stories  = [
   }
 ];
 
-// get all stories (@TODO serve from database later)
-app.get('/api/v1/stories', (req, res) => {
+// Story controllers (@TODO shift them in controller directory later)
+
+// controller for getting all the stories
+const getAllStories = (req, res) => {
   res.status(200).json({
     status: 'success',
     results: stories.length,
@@ -59,10 +61,10 @@ app.get('/api/v1/stories', (req, res) => {
       stories
     }
   });
-});
+};
 
-// get a specific story based on ID (@TODO serve from database later)
-app.get('/api/v1/stories/:id', (req, res) => {
+// controller for getting a specific story
+const getStory = (req, res) => {
   const id = Number(req.params.id);             // convert string to number
   const story = stories.find(s => s.id === id); // find story having the specified ID
 
@@ -79,10 +81,10 @@ app.get('/api/v1/stories/:id', (req, res) => {
       story
     }
   });
-});
+};
 
-// post a new story (@TODO store in database later)
-app.post('/api/v1/stories', (req, res) => {
+// controller for creating a story
+const createStory = (req, res) => {
   const newId = stories[stories.length - 1].id + 1;         // get newID 
   const newStory = Object.assign({ id: newId }, req.body);  // dummy story object
   stories.push(newStory);                                   // pushed in the dummy array
@@ -92,10 +94,10 @@ app.post('/api/v1/stories', (req, res) => {
       story: newStory
     }
   });
-});
+};
 
-// edit a story (@TODO store in database later)
-app.patch('/api/v1/stories/:id', (req, res) => {
+// controller for updating a story (partial payload)
+const updateStoryPatch = (req, res) => {
   const id = Number(req.params.id);             // convert string to number
   const story = stories.find(s => s.id === id); // find story having the specified ID
 
@@ -112,10 +114,10 @@ app.patch('/api/v1/stories/:id', (req, res) => {
       story: '<Updated story here..>'
     }
   });
-});
+};
 
-// edit a story (@TODO store in database later)
-app.put('/api/v1/stories/:id', (req, res) => {
+// controller for updating a story (full payload)
+const updateStoryPut = (req, res) => {
   const id = Number(req.params.id);             // convert string to number
   const story = stories.find(s => s.id === id); // find story having the specified ID
 
@@ -132,10 +134,10 @@ app.put('/api/v1/stories/:id', (req, res) => {
       story: '<Updated story here..>'
     }
   });
-});
+};
 
-// delete a story (@TODO delete from database later)
-app.delete('/api/v1/stories/:id', (req, res) => {
+// controller for deleting a story
+const deleteStory = (req, res) => {
   const id = Number(req.params.id);             // convert string to number
   const story = stories.find(s => s.id === id); // find story having the specified ID
 
@@ -150,7 +152,20 @@ app.delete('/api/v1/stories/:id', (req, res) => {
     status: 'success',                          
     data: null                                  // delete from db (to be done later)
   });
-});
+};
+
+// handle routes using story controllers (@TODO use Router and transfer them in a different directory)
+app
+  .route('/api/v1/stories')
+  .get(getAllStories)
+  .post(createStory);
+
+app
+  .route('/api/v1/stories/:id')
+  .get(getStory)
+  .patch(updateStoryPatch)
+  .put(updateStoryPut)
+  .delete(deleteStory)
 
 // export the application
 module.exports = app;
