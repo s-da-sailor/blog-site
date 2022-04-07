@@ -8,8 +8,8 @@
 // DEPENDENCIES
 const app = require('./app');
 
-// port (@TODO: add this in the environment variables later)
-const port = 3000;
+// PORT (defined in configuration file or 8000 if not defined)
+const port = process.env.PORT || 8000;
 
 // start the server on the specified port
 app.listen(port, () => {
