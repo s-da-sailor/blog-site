@@ -9,21 +9,24 @@
 *             using their username and password. Registered users will be able to post, update and delete stories.
 *             4. Everyone (logged in or anonymous) will be able to read the stories. Anonymous users will be able to only read 
 *             the stories. Registered users will be able to post stories and update/delete stories which are posted
-*             by him/her. 
+*             by the same user. 
 * Author: Akash Lanard
 * Date: 5 April 2022
 */
 
 // DEPENDENCIES
 const express = require('express');
+const dotenv = require('dotenv');
 const storyRouter = require('./routes/storyRoutes');
+
+// CONFIGURATION FILE
+dotenv.config({ path: './config.env' });
 
 // APPLICATION
 const app = express();
 
 // MIDDLEWARES
 app.use(express.json());                        // for getting JSON request body
-
 app.use('/api/v1/stories', storyRouter);        // using story Router
 
 // EXPORT

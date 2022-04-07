@@ -9,10 +9,10 @@
 const express = require('express');
 const storyController = require('./../controllers/storyController');
 
-// Story Router
+// STORY ROUTER
 const router = express.Router();
 
-// Routes
+// ROUTES
 router
   .route('/')
   .get(storyController.getAllStories)
