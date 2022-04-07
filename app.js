@@ -114,5 +114,25 @@ app.patch('/api/v1/stories/:id', (req, res) => {
   });
 });
 
+// edit a story (@TODO store in database later)
+app.put('/api/v1/stories/:id', (req, res) => {
+  const id = Number(req.params.id);             // convert string to number
+  const story = stories.find(s => s.id === id); // find story having the specified ID
+
+  if(!story) {                                  // if the story is not found return 404
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID'
+    });
+  }
+
+  res.status(200).json({                        // return the story as JSON 
+    status: 'success',                          
+    data: {                                     // update in db and return (to be done later)
+      story: '<Updated story here..>'
+    }
+  });
+});
+
 // export the application
 module.exports = app;
