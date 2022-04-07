@@ -86,8 +86,32 @@ app.post('/api/v1/stories', (req, res) => {
   const newId = stories[stories.length - 1].id + 1;         // get newID 
   const newStory = Object.assign({ id: newId }, req.body);  // dummy story object
   stories.push(newStory);                                   // pushed in the dummy array
-  console.log(newStory);
-  res.send('Done');
+  res.status(201).json({
+    status: 'success',
+    data: {                                     // create in db and return (to be done later)
+      story: newStory
+    }
+  });
+});
+
+// edit a story (@TODO store in database later)
+app.patch('/api/v1/stories/:id', (req, res) => {
+  const id = Number(req.params.id);             // convert string to number
+  const story = stories.find(s => s.id === id); // find story having the specified ID
+
+  if(!story) {                                  // if the story is not found return 404
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID'
+    });
+  }
+
+  res.status(200).json({                        // return the story as JSON 
+    status: 'success',                          
+    data: {                                     // update in db and return (to be done later)
+      story: '<Updated story here..>'
+    }
+  });
 });
 
 // export the application
