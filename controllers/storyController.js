@@ -184,19 +184,27 @@ exports.updateStoryPut = async (req, res) => {
 };
 
 // controller for deleting a story
-exports.deleteStory = (req, res) => {
-  const id = Number(req.params.id);             // convert string to number
-  const story = stories.find(s => s.id === id); // find story having the specified ID
+exports.deleteStory = async (req, res) => {
+  try {
+    const id = Number(req.params.id);                                      // convert string to number
+                                                                  // it returns number of deleted rows
+    const deletedRowsCount = await Story.destroy({ where: { id: id } });   // delete the entry from DB
 
-  if(!story) {                                  // if the story is not found return 404
-    return res.status(404).json({
+    if(deletedRowsCount) {                                                 // if a row is deleted
+      res.status(204).json({                                               // no content is returned
+        status: 'success',
+        data: null
+      });
+    } else {                                                              // if a row is not deleted
+      res.status(400).json({                                              // it is an invalid request
+        status: 'Invalid ID',
+        data: null
+      });
+    }
+  } catch(err) {
+    res.status(500).json({                                                // Internal server error
       status: 'fail',
-      message: 'Invalid ID'
+      message: err
     });
   }
-
-  res.status(204).json({                        // body is empty (no content)
-    status: 'success',                          
-    data: null                                  // delete from db (to be done later)
-  });
 };
