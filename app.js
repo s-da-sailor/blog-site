@@ -17,10 +17,22 @@
 // DEPENDENCIES
 const express = require('express');
 const dotenv = require('dotenv');
+const db = require('./config/database');
 const storyRouter = require('./routes/storyRoutes');
 
 // CONFIGURATION FILE
 dotenv.config({ path: './config.env' });
+
+// DATABASE TEST AND RUN
+(async () => {
+  try {
+    await db.authenticate();
+
+    console.log('Database Connected');
+  } catch (err) {
+    console.log('Error: ' + err);
+  }
+})();
 
 // APPLICATION
 const app = express();
