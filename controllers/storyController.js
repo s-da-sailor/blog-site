@@ -107,23 +107,43 @@ exports.createStory = async (req, res) => {
 };
 
 // controller for updating a story (partial payload)
-exports.updateStoryPatch = (req, res) => {
-  const id = Number(req.params.id);             // convert string to number
-  const story = stories.find(s => s.id === id); // find story having the specified ID
+exports.updateStoryPatch = async (req, res) => {
+  try {
+    const id = Number(req.params.id);             // convert string to number
 
-  if(!story) {                                  // if the story is not found return 404
-    return res.status(404).json({
+    const info = {};
+    if(req.body.title) {
+      info.title = req.body.title;
+    }
+    if(req.body.description) {
+      info.description = req.body.description;
+    }
+
+    console.log(info);
+
+    const [updatedStoriesCount, ] = await Story.update(info, { where: { id: id } }); // find story having the specified ID
+
+    if(updatedStoriesCount) {
+      const updatedStory = await Story.findOne({ where: { id: id } });
+
+      res.status(200).json({                        // return the story as JSON 
+        status: 'success',                          
+        data: {                                     // update in db and return (to be done later)
+          story: updatedStory
+        }
+      });
+    } else {
+      res.status(404).json({                        // return the story as JSON 
+        status: 'failed',
+        message: 'Invalid ID'                          
+      });
+    }
+  } catch(err) {
+    res.status(500).json({                      // Internal server error
       status: 'fail',
-      message: 'Invalid ID'
+      message: err
     });
   }
-
-  res.status(200).json({                        // return the story as JSON 
-    status: 'success',                          
-    data: {                                     // update in db and return (to be done later)
-      story: '<Updated story here..>'
-    }
-  });
 };
 
 // controller for updating a story (full payload)
