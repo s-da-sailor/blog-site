@@ -109,10 +109,10 @@ exports.createStory = async (req, res) => {
 // controller for updating a story (partial payload)
 exports.updateStoryPatch = async (req, res) => {
   try {
-    const id = Number(req.params.id);             // convert string to number
+    const id = Number(req.params.id);               // convert string to number
 
     const info = {};
-    if(req.body.title) {
+    if(req.body.title) {                            // construct object from partial payload
       info.title = req.body.title;
     }
     if(req.body.description) {
@@ -120,26 +120,26 @@ exports.updateStoryPatch = async (req, res) => {
     }
 
     console.log(info);
-
+                                                    // first returned array element is the number of rows affected in the update
     const [updatedStoriesCount, ] = await Story.update(info, { where: { id: id } }); // find story having the specified ID
 
-    if(updatedStoriesCount) {
+    if(updatedStoriesCount) {                       // if it is 1 then the database is updated 
       const updatedStory = await Story.findOne({ where: { id: id } });
-
-      res.status(200).json({                        // return the story as JSON 
+                                                    // get the updated story 
+      res.status(200).json({      
         status: 'success',                          
-        data: {                                     // update in db and return (to be done later)
+        data: {                                     // return the updated story
           story: updatedStory
         }
       });
-    } else {
-      res.status(404).json({                        // return the story as JSON 
+    } else {                                        // if it is 0 then the database is not updated 
+      res.status(404).json({                       
         status: 'failed',
         message: 'Invalid ID'                          
       });
     }
   } catch(err) {
-    res.status(500).json({                      // Internal server error
+    res.status(500).json({                          // Internal server error
       status: 'fail',
       message: err
     });
@@ -147,23 +147,40 @@ exports.updateStoryPatch = async (req, res) => {
 };
 
 // controller for updating a story (full payload)
-exports.updateStoryPut = (req, res) => {
-  const id = Number(req.params.id);             // convert string to number
-  const story = stories.find(s => s.id === id); // find story having the specified ID
+exports.updateStoryPut = async (req, res) => {
+  try {
+    const id = Number(req.params.id);               // convert string to number
 
-  if(!story) {                                  // if the story is not found return 404
-    return res.status(404).json({
+    const info = {};
+    info.title = req.body.title;                    // construct object from full payload
+    info.description = req.body.description;
+
+    console.log(info);
+                                                    // first returned array element is the number of rows affected in the update
+    const [updatedStoriesCount, ] = await Story.update(info, { where: { id: id } }); // find story having the specified ID
+
+
+    if(updatedStoriesCount) {                       // if it is 1 then the database is updated 
+      const updatedStory = await Story.findOne({ where: { id: id } });
+                                                    // get the updated story 
+      res.status(200).json({
+        status: 'success',                          
+        data: {                                     // return the updated story
+          story: updatedStory
+        }
+      });                                           // if it is 0 then the database is not updated 
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        message: 'Invalid ID'                          
+      });
+    }
+  } catch(err) {
+    res.status(500).json({                          // Internal server error
       status: 'fail',
-      message: 'Invalid ID'
+      message: err
     });
   }
-
-  res.status(200).json({                        // return the story as JSON 
-    status: 'success',                          
-    data: {                                     // update in db and return (to be done later)
-      story: '<Updated story here..>'
-    }
-  });
 };
 
 // controller for deleting a story
