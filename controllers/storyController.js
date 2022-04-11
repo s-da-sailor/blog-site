@@ -8,33 +8,8 @@
 // DEPENDENCIES
 const Story = require('./../models/storyModel');
 
-//dummy data for stories (@TODO serve from db later)
-const stories  = [
-  {
-    id: 0,
-    title: "Dummy Title 1",
-    description: "Dummy Description 1",
-    author: "Dummy author 1",
-    createdAt: Date.now()
-  },
-  {
-    id: 1,
-    title: "Dummy Title 2",
-    description: "Dummy Description 2",
-    author: "Dummy author 2",
-    createdAt: Date.now()
-  },
-  {
-    id: 2,
-    title: "Dummy Title 3",
-    description: "Dummy Description 3",
-    author: "Dummy author 3",
-    createdAt: Date.now()
-  }
-];
-
 // Upto this point we assume that request validation has been done
-// So in case of any error in the try catch blocks it has to be in the server side
+// So in case of any error in the try catch blocks it has to be on the server side
 
 // controller for getting all the stories
 exports.getAllStories = async (req, res) => {   
