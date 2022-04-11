@@ -34,14 +34,22 @@ const stories  = [
 ];
 
 // controller for getting all the stories
-exports.getAllStories = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    results: stories.length,
-    data: {                                     // serve dummy stories array
-      stories
-    }
-  });
+exports.getAllStories = async (req, res) => {   // Upto this point we assume that request validation has been done
+  try {                                         // So in case of any error it has to be in the server side
+    let stories = await Story.findAll({});
+    res.status(200).json({                     // Send all stories as response (or empty array if not found)
+      status: 'success',
+      results: stories.length,
+      data: {
+        stories
+      }
+    });              
+  } catch(err) {
+    res.status(500).json({                    // Internal server error
+      status: 'fail',
+      message: err
+    });                      
+  }
 };
 
 // controller for getting a specific story
