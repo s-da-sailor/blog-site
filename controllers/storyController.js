@@ -53,23 +53,30 @@ exports.getAllStories = async (req, res) => {   // Upto this point we assume tha
 };
 
 // controller for getting a specific story
-exports.getStory = (req, res) => {
-  const id = Number(req.params.id);             // convert string to number
-  const story = stories.find(s => s.id === id); // find story having the specified ID
+exports.getStory = async (req, res) => {
+  try {
+    const id = Number(req.params.id);                         // convert string to number
+    const story = await Story.findOne({ where: { id: id } }); // find story having the specified ID
 
-  if(!story) {                                  // if the story is not found return 404
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID'
-    });
-  }
-
-  res.status(200).json({                        // return the story as JSON 
-    status: 'success',
-    data: {                                     // serve from dummy data
-      story
+    if(!story) {                                              // if the story is not found return 404
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Invalid ID'
+      });
     }
-  });
+
+    res.status(200).json({                                   // return the story as JSON 
+      status: 'success',
+      data: {                                             
+        story
+      }
+    });
+  } catch(err) {
+    res.status(500).json({                                   // Internal server error
+      status: 'fail',
+      message: err
+    }); 
+  }
 };
 
 // controller for creating a story
