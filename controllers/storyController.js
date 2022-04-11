@@ -5,6 +5,9 @@
 * Date: 7 April 2022
 */
 
+// DEPENDENCIES
+const Story = require('./../models/storyModel');
+
 //dummy data for stories (@TODO serve from db later)
 const stories  = [
   {
