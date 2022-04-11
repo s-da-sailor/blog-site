@@ -18,6 +18,8 @@
   "homepage": "https://github.com/s-da-sailor/blog-site#readme",
   "dependencies": {
     "dotenv": "^16.0.0",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.18.0"
   }
 }
