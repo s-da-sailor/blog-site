@@ -33,9 +33,12 @@ const stories  = [
   }
 ];
 
+// Upto this point we assume that request validation has been done
+// So in case of any error in the try catch blocks it has to be in the server side
+
 // controller for getting all the stories
-exports.getAllStories = async (req, res) => {   // Upto this point we assume that request validation has been done
-  try {                                         // So in case of any error it has to be in the server side
+exports.getAllStories = async (req, res) => {   
+  try {                                         
     let stories = await Story.findAll({});
     res.status(200).json({                     // Send all stories as response (or empty array if not found)
       status: 'success',
@@ -80,16 +83,27 @@ exports.getStory = async (req, res) => {
 };
 
 // controller for creating a story
-exports.createStory = (req, res) => {
-  const newId = stories[stories.length - 1].id + 1;         // get newID 
-  const newStory = Object.assign({ id: newId }, req.body);  // dummy story object
-  stories.push(newStory);                                   // pushed in the dummy array
-  res.status(201).json({
-    status: 'success',
-    data: {                                     // create in db and return (to be done later)
-      story: newStory
-    }
-  });
+exports.createStory = async (req, res) => {
+  try {
+    const info = {                              // get info from request body
+      title: req.body.title,
+      description: req.body.description,
+      author: req.body.author
+    };
+
+    const newStory = await Story.create(info);  // create new story in DB 
+    res.status(201).json({            
+      status: 'success',
+      data: {
+        story: newStory                         // return newly created story
+      }
+    });
+  } catch(err) {
+    res.status(500).json({                      // Internal server error
+      status: 'fail',
+      message: err
+    }); 
+  }
 };
 
 // controller for updating a story (partial payload)
