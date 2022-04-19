@@ -41,5 +41,13 @@ const app = express();
 app.use(express.json()); // for getting JSON request body
 app.use('/api/v1/stories', storyRouter); // using story Router
 
+// for unhandled routes
+app.all('*', (req, res, next) => {
+  res.status(404).json({
+    status: 'fail',
+    message: `Can't find ${req.originalUrl} on this server!`,
+  });
+});
+
 // EXPORT
 module.exports = app;
