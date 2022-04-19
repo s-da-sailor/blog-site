@@ -1,9 +1,9 @@
 /*
-* Title: Server Sub-App
-* Description: This application starts a server and listens on a specefied port 
-* Author: Akash Lanard
-* Date: 6 April 2022
-*/
+ * Title: Server Sub-App
+ * Description: This application starts a server and listens on a specefied port
+ * Author: Akash Lanard
+ * Date: 6 April 2022
+ */
 
 // DEPENDENCIES
 const app = require('./app');

@@ -1,13 +1,13 @@
 /*
-* Title: Story Routes
-* Description: This application returns a router which maps story related requests to appropriate story controllers
-* Author: Akash Lanard
-* Date: 7 April 2022
-*/
+ * Title: Story Routes
+ * Description: This application returns a router which maps story related requests to appropriate story controllers
+ * Author: Akash Lanard
+ * Date: 7 April 2022
+ */
 
 // DEPENDENCIES
 const express = require('express');
-const storyController = require('./../controllers/storyController');
+const storyController = require('../controllers/storyController');
 
 // STORY ROUTER
 const router = express.Router();
