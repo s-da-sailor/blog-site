@@ -18,6 +18,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const db = require('./config/database');
+const AppError = require('./utils/appError');
 const storyRouter = require('./routes/storyRoutes');
 
 // CONFIGURATION FILE
@@ -43,11 +44,7 @@ app.use('/api/v1/stories', storyRouter); // using story Router
 
 // for unhandled routes
 app.all('*', (req, res, next) => {
-  const err = new Error(`Can't find ${req.originalUrl} on this server!`);
-  err.status = 'fail';
-  err.statusCode = 404;
-
-  next(err);
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`));
 });
 
 // global error handling middleware
