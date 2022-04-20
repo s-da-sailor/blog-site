@@ -1,13 +1,8 @@
-/*
- * Title: Story Model
- * Description: Story Model for the Blog Site
- * Author: Akash Lanard
- * Date: 11 April 2022
- */
-
+// DEPENDENCIES
 const { DataTypes } = require('sequelize');
 const db = require('../config/database');
 
+// STORY MODEL
 const Story = db.define(
   'story',
   {
@@ -29,4 +24,5 @@ const Story = db.define(
   }
 );
 
+// EXPORT
 module.exports = Story;
