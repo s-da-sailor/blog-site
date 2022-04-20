@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const Story = require('../models/storyModel');
-const AppError = require('../utils/appError');
+const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
 // CONTROLLERS
