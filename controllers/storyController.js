@@ -7,6 +7,7 @@
 
 // DEPENDENCIES
 const Story = require('../models/storyModel');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 // Upto this point we assume that request validation has been done
@@ -32,10 +33,7 @@ exports.getStory = catchAsync(async (req, res, next) => {
 
   if (!story) {
     // if the story is not found return 404
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
+    return next(new AppError('No story found with that ID', 404));
   }
 
   res.status(200).json({
@@ -85,28 +83,23 @@ exports.updateStoryPatch = catchAsync(async (req, res, next) => {
     where: { id: id },
   }); // find story having the specified ID
 
-  if (updatedStoriesCount) {
-    // if it is 1 then the database is updated
-    const updatedStory = await Story.findOne({
-      where: { id: id },
-      raw: true,
-    });
-
-    // get the updated story
-    res.status(200).json({
-      status: 'success',
-      data: {
-        // return the updated story
-        story: updatedStory,
-      },
-    });
-  } else {
-    // if it is 0 then the database is not updated
-    res.status(404).json({
-      status: 'failed',
-      message: 'Invalid ID',
-    });
+  if (!updatedStoriesCount) {
+    return next(new AppError('No story found with that ID', 404));
   }
+
+  const updatedStory = await Story.findOne({
+    where: { id: id },
+    raw: true,
+  });
+
+  // get the updated story
+  res.status(200).json({
+    status: 'success',
+    data: {
+      // return the updated story
+      story: updatedStory,
+    },
+  });
 });
 
 // controller for updating a story (full payload)
@@ -123,27 +116,23 @@ exports.updateStoryPut = catchAsync(async (req, res, next) => {
     where: { id: id },
   }); // find story having the specified ID
 
-  if (updatedStoriesCount) {
-    // if it is 1 then the database is updated
-    const updatedStory = await Story.findOne({
-      where: { id: id },
-      raw: true,
-    });
-
-    // get the updated story
-    res.status(200).json({
-      status: 'success',
-      data: {
-        // return the updated story
-        story: updatedStory,
-      },
-    }); // if it is 0 then the database is not updated
-  } else {
-    res.status(404).json({
-      status: 'failed',
-      message: 'Invalid ID',
-    });
+  if (!updatedStoriesCount) {
+    return next(new AppError('No story found with that ID', 404));
   }
+
+  const updatedStory = await Story.findOne({
+    where: { id: id },
+    raw: true,
+  });
+
+  // get the updated story
+  res.status(200).json({
+    status: 'success',
+    data: {
+      // return the updated story
+      story: updatedStory,
+    },
+  });
 });
 
 // controller for deleting a story
@@ -152,19 +141,12 @@ exports.deleteStory = catchAsync(async (req, res, next) => {
   // it returns number of deleted rows
   const deletedRowsCount = await Story.destroy({ where: { id: id } }); // delete the entry from DB
 
-  if (deletedRowsCount) {
-    // if a row is deleted
-    res.status(204).json({
-      // no content is returned
-      status: 'success',
-      data: null,
-    });
-  } else {
-    // if a row is not deleted
-    res.status(400).json({
-      // it is an invalid request
-      status: 'Invalid ID',
-      data: null,
-    });
+  if (!deletedRowsCount) {
+    return next(new AppError('No story found with that ID', 404));
   }
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
 });
