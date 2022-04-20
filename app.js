@@ -10,6 +10,7 @@ const db = require('./config/database');
 const AppError = require('./utils/AppError');
 const globalErrorHandler = require('./controllers/errorController');
 const storyRouter = require('./routes/storyRoutes');
+const userRouter = require('./routes/userRoutes');
 
 // CONFIGURATION FILE
 dotenv.config({ path: './config.env' });
@@ -31,6 +32,7 @@ const app = express();
 // MIDDLEWARES
 app.use(express.json());
 app.use('/api/v1/stories', storyRouter);
+app.use('/api/v1/users', userRouter);
 
 // for unhandled routes
 app.all('*', (req, res, next) => {
