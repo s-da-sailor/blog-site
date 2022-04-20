@@ -7,7 +7,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const db = require('./config/database');
-const AppError = require('./utils/appError');
+const AppError = require('./utils/AppError');
 const globalErrorHandler = require('./controllers/errorController');
 const storyRouter = require('./routes/storyRoutes');
 
@@ -29,8 +29,8 @@ dotenv.config({ path: './config.env' });
 const app = express();
 
 // MIDDLEWARES
-app.use(express.json()); // for getting JSON request body
-app.use('/api/v1/stories', storyRouter); // using story Router
+app.use(express.json());
+app.use('/api/v1/stories', storyRouter);
 
 // for unhandled routes
 app.all('*', (req, res, next) => {
