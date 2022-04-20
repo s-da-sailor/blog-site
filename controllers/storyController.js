@@ -7,211 +7,164 @@
 
 // DEPENDENCIES
 const Story = require('../models/storyModel');
+const catchAsync = require('../utils/catchAsync');
 
 // Upto this point we assume that request validation has been done
 // So in case of any error in the try catch blocks it has to be on the server side
 
 // controller for getting all the stories
-exports.getAllStories = async (req, res) => {
-  try {
-    const stories = await Story.findAll({ raw: true });
-    res.status(200).json({
-      // Send all stories as response (or empty array if not found)
-      status: 'success',
-      results: stories.length,
-      data: {
-        stories,
-      },
-    });
-  } catch (err) {
-    res.status(500).json({
-      // Internal server error
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+exports.getAllStories = catchAsync(async (req, res, next) => {
+  const stories = await Story.findAll({ raw: true });
+  res.status(200).json({
+    // Send all stories as response (or empty array if not found)
+    status: 'success',
+    results: stories.length,
+    data: {
+      stories,
+    },
+  });
+});
 
 // controller for getting a specific story
-exports.getStory = async (req, res) => {
-  try {
-    const id = Number(req.params.id); // convert string to number
-    const story = await Story.findOne({ where: { id: id }, raw: true }); // find story having the specified ID
+exports.getStory = catchAsync(async (req, res, next) => {
+  const id = Number(req.params.id); // convert string to number
+  const story = await Story.findOne({ where: { id: id }, raw: true }); // find story having the specified ID
 
-    if (!story) {
-      // if the story is not found return 404
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Invalid ID',
-      });
-    }
-
-    res.status(200).json({
-      // return the story as JSON
-      status: 'success',
-      data: {
-        story,
-      },
-    });
-  } catch (err) {
-    res.status(500).json({
-      // Internal server error
+  if (!story) {
+    // if the story is not found return 404
+    return res.status(404).json({
       status: 'fail',
-      message: err,
+      message: 'Invalid ID',
     });
   }
-};
+
+  res.status(200).json({
+    // return the story as JSON
+    status: 'success',
+    data: {
+      story,
+    },
+  });
+});
 
 // controller for creating a story
-exports.createStory = async (req, res) => {
-  try {
-    const info = {
-      // get info from request body
-      title: req.body.title,
-      description: req.body.description,
-      author: req.body.author,
-    };
+exports.createStory = catchAsync(async (req, res, next) => {
+  const info = {
+    // get info from request body
+    title: req.body.title,
+    description: req.body.description,
+    author: req.body.author,
+  };
 
-    const newStory = await Story.create(info); // create new story in DB
+  const newStory = await Story.create(info); // create new story in DB
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        story: newStory.dataValues, // return newly created story
-      },
-    });
-  } catch (err) {
-    res.status(500).json({
-      // Internal server error
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+  res.status(201).json({
+    status: 'success',
+    data: {
+      story: newStory.dataValues, // return newly created story
+    },
+  });
+});
 
 // controller for updating a story (partial payload)
-exports.updateStoryPatch = async (req, res) => {
-  try {
-    const id = Number(req.params.id); // convert string to number
+exports.updateStoryPatch = catchAsync(async (req, res, next) => {
+  const id = Number(req.params.id); // convert string to number
 
-    const info = {};
-    if (req.body.title) {
-      // construct object from partial payload
-      info.title = req.body.title;
-    }
-    if (req.body.description) {
-      info.description = req.body.description;
-    }
+  const info = {};
+  if (req.body.title) {
+    // construct object from partial payload
+    info.title = req.body.title;
+  }
+  if (req.body.description) {
+    info.description = req.body.description;
+  }
 
-    console.log(info);
-    // first returned array element is the number of rows affected in the update
-    const [updatedStoriesCount] = await Story.update(info, {
+  console.log(info);
+  // first returned array element is the number of rows affected in the update
+  const [updatedStoriesCount] = await Story.update(info, {
+    where: { id: id },
+  }); // find story having the specified ID
+
+  if (updatedStoriesCount) {
+    // if it is 1 then the database is updated
+    const updatedStory = await Story.findOne({
       where: { id: id },
-    }); // find story having the specified ID
+      raw: true,
+    });
 
-    if (updatedStoriesCount) {
-      // if it is 1 then the database is updated
-      const updatedStory = await Story.findOne({
-        where: { id: id },
-        raw: true,
-      });
-
-      // get the updated story
-      res.status(200).json({
-        status: 'success',
-        data: {
-          // return the updated story
-          story: updatedStory,
-        },
-      });
-    } else {
-      // if it is 0 then the database is not updated
-      res.status(404).json({
-        status: 'failed',
-        message: 'Invalid ID',
-      });
-    }
-  } catch (err) {
-    res.status(500).json({
-      // Internal server error
-      status: 'fail',
-      message: err,
+    // get the updated story
+    res.status(200).json({
+      status: 'success',
+      data: {
+        // return the updated story
+        story: updatedStory,
+      },
+    });
+  } else {
+    // if it is 0 then the database is not updated
+    res.status(404).json({
+      status: 'failed',
+      message: 'Invalid ID',
     });
   }
-};
+});
 
 // controller for updating a story (full payload)
-exports.updateStoryPut = async (req, res) => {
-  try {
-    const id = Number(req.params.id); // convert string to number
+exports.updateStoryPut = catchAsync(async (req, res, next) => {
+  const id = Number(req.params.id); // convert string to number
 
-    const info = {};
-    info.title = req.body.title; // construct object from full payload
-    info.description = req.body.description;
+  const info = {};
+  info.title = req.body.title; // construct object from full payload
+  info.description = req.body.description;
 
-    console.log(info);
-    // first returned array element is the number of rows affected in the update
-    const [updatedStoriesCount] = await Story.update(info, {
+  console.log(info);
+  // first returned array element is the number of rows affected in the update
+  const [updatedStoriesCount] = await Story.update(info, {
+    where: { id: id },
+  }); // find story having the specified ID
+
+  if (updatedStoriesCount) {
+    // if it is 1 then the database is updated
+    const updatedStory = await Story.findOne({
       where: { id: id },
-    }); // find story having the specified ID
+      raw: true,
+    });
 
-    if (updatedStoriesCount) {
-      // if it is 1 then the database is updated
-      const updatedStory = await Story.findOne({
-        where: { id: id },
-        raw: true,
-      });
-
-      // get the updated story
-      res.status(200).json({
-        status: 'success',
-        data: {
-          // return the updated story
-          story: updatedStory,
-        },
-      }); // if it is 0 then the database is not updated
-    } else {
-      res.status(404).json({
-        status: 'failed',
-        message: 'Invalid ID',
-      });
-    }
-  } catch (err) {
-    res.status(500).json({
-      // Internal server error
-      status: 'fail',
-      message: err,
+    // get the updated story
+    res.status(200).json({
+      status: 'success',
+      data: {
+        // return the updated story
+        story: updatedStory,
+      },
+    }); // if it is 0 then the database is not updated
+  } else {
+    res.status(404).json({
+      status: 'failed',
+      message: 'Invalid ID',
     });
   }
-};
+});
 
 // controller for deleting a story
-exports.deleteStory = async (req, res) => {
-  try {
-    const id = Number(req.params.id); // convert string to number
-    // it returns number of deleted rows
-    const deletedRowsCount = await Story.destroy({ where: { id: id } }); // delete the entry from DB
+exports.deleteStory = catchAsync(async (req, res, next) => {
+  const id = Number(req.params.id); // convert string to number
+  // it returns number of deleted rows
+  const deletedRowsCount = await Story.destroy({ where: { id: id } }); // delete the entry from DB
 
-    if (deletedRowsCount) {
-      // if a row is deleted
-      res.status(204).json({
-        // no content is returned
-        status: 'success',
-        data: null,
-      });
-    } else {
-      // if a row is not deleted
-      res.status(400).json({
-        // it is an invalid request
-        status: 'Invalid ID',
-        data: null,
-      });
-    }
-  } catch (err) {
-    res.status(500).json({
-      // Internal server error
-      status: 'fail',
-      message: err,
+  if (deletedRowsCount) {
+    // if a row is deleted
+    res.status(204).json({
+      // no content is returned
+      status: 'success',
+      data: null,
+    });
+  } else {
+    // if a row is not deleted
+    res.status(400).json({
+      // it is an invalid request
+      status: 'Invalid ID',
+      data: null,
     });
   }
-};
+});
