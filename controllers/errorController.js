@@ -42,6 +42,8 @@ const sendErrorProd = (err, res) => {
       message: err.message,
     });
   } else {
+    // @TODO: handle ERRORS
+
     res.status(500).json({
       status: 'error',
       message: 'Something went wrong!',

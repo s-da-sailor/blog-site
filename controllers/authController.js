@@ -35,12 +35,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   const { username, name, email, password, passwordConfirm } = req.body;
   const newUser = await User.create({
     username,
-    name,
-    email,
-    password,
-    passwordConfirm,
-  });
-
+    
   delete newUser.dataValues.password;
   delete newUser.dataValues.passwordConfirm;
 
