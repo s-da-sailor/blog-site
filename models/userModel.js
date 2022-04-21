@@ -49,7 +49,7 @@ const User = db.define(
       },
     },
     password: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(100),
       allowNull: false,
       validate: {
         notNull: {
@@ -67,15 +67,7 @@ const User = db.define(
     },
     passwordConfirm: {
       type: DataTypes.VIRTUAL,
-      allowNull: false,
       validate: {
-        notNull: {
-          msg: 'Please confirm your password',
-        },
-        notEmpty: {
-          args: true,
-          msg: 'Please confirm your password',
-        },
         isConfirmed(el) {
           if (el !== this.password) {
             throw new Error('Passwords are not same!');
@@ -83,11 +75,12 @@ const User = db.define(
         },
       },
     },
-    passwordChanged: {
+    passwordChangedAt: {
       type: DataTypes.TIME,
     },
   },
   {
+    tableName: 'Users',
     hooks: {
       afterValidate: async function (user) {
         if (user.changed('password')) {
@@ -95,11 +88,23 @@ const User = db.define(
         }
       },
     },
-  },
-  {
-    tableName: 'Users',
+    defaultScope: {
+      attributes: { exclude: ['password'] },
+    },
+    scopes: {
+      withPassword: {
+        attributes: {},
+      },
+    },
   }
 );
+
+User.prototype.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 // EXPORT
 module.exports = User;
