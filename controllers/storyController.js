@@ -53,7 +53,10 @@ exports.updateStoryPatch = catchAsync(async (req, res, next) => {
 
   const previousStory = await Story.findOne({ where: { id: id }, raw: true });
 
-  if (!previousStory || previousStory.author !== req.user.username) {
+  if (!previousStory) {
+    return next(new AppError('No story found with this ID', 404));
+  }
+  if (previousStory.author !== req.user.username) {
     return next(
       new AppError('You do not have permission to update this story', 403)
     );
@@ -67,14 +70,9 @@ exports.updateStoryPatch = catchAsync(async (req, res, next) => {
     info.description = req.body.description;
   }
 
-  // first returned array element is the number of rows affected in the update
-  const [updatedStoriesCount] = await Story.update(info, {
+  await Story.update(info, {
     where: { id: id },
   });
-
-  if (!updatedStoriesCount) {
-    return next(new AppError('No story found with that ID', 404));
-  }
 
   const updatedStory = await Story.findOne({
     where: { id: id },
@@ -94,7 +92,10 @@ exports.updateStoryPut = catchAsync(async (req, res, next) => {
 
   const previousStory = await Story.findOne({ where: { id: id }, raw: true });
 
-  if (!previousStory || previousStory.author !== req.user.username) {
+  if (!previousStory) {
+    return next(new AppError('No story found with this ID', 404));
+  }
+  if (previousStory.author !== req.user.username) {
     return next(
       new AppError('You do not have permission to update this story', 403)
     );
@@ -104,13 +105,9 @@ exports.updateStoryPut = catchAsync(async (req, res, next) => {
   info.title = req.body.title;
   info.description = req.body.description;
 
-  const [updatedStoriesCount] = await Story.update(info, {
+  await Story.update(info, {
     where: { id: id },
   });
-
-  if (!updatedStoriesCount) {
-    return next(new AppError('No story found with that ID', 404));
-  }
 
   const updatedStory = await Story.findOne({
     where: { id: id },
@@ -130,17 +127,16 @@ exports.deleteStory = catchAsync(async (req, res, next) => {
 
   const previousStory = await Story.findOne({ where: { id: id }, raw: true });
 
+  if (!previousStory) {
+    return next(new AppError('No story found with this ID', 404));
+  }
   if (!previousStory || previousStory.author !== req.user.username) {
     return next(
       new AppError('You do not have permission to delete this story', 403)
     );
   }
 
-  const deletedRowsCount = await Story.destroy({ where: { id: id } }); // returns number of deleted rows
-
-  if (!deletedRowsCount) {
-    return next(new AppError('No story found with that ID', 404));
-  }
+  await Story.destroy({ where: { id: id } });
 
   res.status(204).json({
     status: 'success',
