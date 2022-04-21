@@ -1,13 +1,17 @@
 // DEPENDENCIES
-//const User = require('../models/userModel');
+const User = require('../models/userModel');
 //const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
 // CONTROLLERS
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not defined!',
+  const users = await User.findAll({ raw: true });
+  res.status(200).json({
+    status: 'success',
+    results: users.length,
+    data: {
+      users,
+    },
   });
 });
 

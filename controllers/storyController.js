@@ -7,7 +7,6 @@ const catchAsync = require('../utils/catchAsync');
 exports.getAllStories = catchAsync(async (req, res, next) => {
   const stories = await Story.findAll({ raw: true });
   res.status(200).json({
-    // Send all stories as response (or empty array if not found)
     status: 'success',
     results: stories.length,
     data: {
