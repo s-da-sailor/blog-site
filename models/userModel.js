@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const { DataTypes } = require('sequelize');
+const bcrypt = require('bcryptjs');
 const db = require('../config/database');
 
 // USER MODEL
@@ -30,17 +31,20 @@ const User = db.define(
     email: {
       type: DataTypes.STRING(320),
       allowNull: false,
-      unique: true,
+      unique: {
+        args: true,
+        msg: 'This email is already in use',
+      },
       validate: {
         notNull: {
-          msg: 'Email cannot be null',
+          msg: 'Please provide a email',
         },
         notEmpty: {
           args: true,
           msg: 'Email cannot be empty',
         },
         isEmail: {
-          msg: 'Must be a valid email address',
+          msg: 'Please provide a valid email address',
         },
       },
     },
@@ -49,7 +53,7 @@ const User = db.define(
       allowNull: false,
       validate: {
         notNull: {
-          msg: 'Password cannot be null',
+          msg: 'Please provide a password',
         },
         notEmpty: {
           args: true,
@@ -61,8 +65,35 @@ const User = db.define(
         },
       },
     },
+    passwordConfirm: {
+      type: DataTypes.VIRTUAL,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Please confirm your password',
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Please confirm your password',
+        },
+        isConfirmed(el) {
+          if (el !== this.password) {
+            throw new Error('Passwords are not same!');
+          }
+        },
+      },
+    },
     passwordChanged: {
       type: DataTypes.TIME,
+    },
+  },
+  {
+    hooks: {
+      afterValidate: async function (user) {
+        if (user.changed('password')) {
+          user.password = await bcrypt.hash(user.password, 12);
+        }
+      },
     },
   },
   {
