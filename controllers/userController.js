@@ -22,13 +22,6 @@ exports.getUser = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createUser = catchAsync(async (req, res, next) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not defined!',
-  });
-});
-
 exports.updateUserPatch = catchAsync(async (req, res, next) => {
   res.status(500).json({
     status: 'error',

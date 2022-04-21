@@ -6,21 +6,18 @@ const authController = require('../controllers/authController');
 // USER ROUTER
 const router = express.Router();
 
+// ROUTES
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
-// ROUTES
-router
-  .route('/')
-  .get(userController.getAllUsers)
-  .post(userController.createUser);
+router.route('/').get(userController.getAllUsers);
 
 router
-  .route('/:id')
+  .route('/:username')
   .get(userController.getUser)
-  .patch(userController.updateUserPatch)
-  .put(userController.updateUserPut)
-  .delete(userController.deleteUser);
+  .patch(authController.protect, userController.updateUserPatch)
+  .put(authController.protect, userController.updateUserPut)
+  .delete(authController.protect, userController.deleteUser);
 
 // EXPORT
 module.exports = router;

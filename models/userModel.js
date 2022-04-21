@@ -7,6 +7,32 @@ const db = require('../config/database');
 const User = db.define(
   'user',
   {
+    username: {
+      type: DataTypes.STRING(30),
+      allowNull: false,
+      primaryKey: true,
+      unique: {
+        args: true,
+        msg: 'This username is already in use',
+      },
+      validate: {
+        notNull: {
+          msg: 'Username cannot be null',
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Username cannot be empty',
+        },
+        len: {
+          args: [1, 30],
+          msg: 'Username must be between 1 and 30 characters',
+        },
+        is: {
+          args: [/([A-Za-z.0-9\-_]+)/],
+          msg: 'Only letters, numbers, underscores, periods and dashes are allowed in username',
+        },
+      },
+    },
     name: {
       type: DataTypes.STRING(50),
       allowNull: false,

@@ -9,15 +9,15 @@ const router = express.Router();
 // ROUTES
 router
   .route('/')
-  .get(authController.protect, storyController.getAllStories)
-  .post(storyController.createStory);
+  .get(storyController.getAllStories)
+  .post(authController.protect, storyController.createStory);
 
 router
   .route('/:id')
   .get(storyController.getStory)
-  .patch(storyController.updateStoryPatch)
-  .put(storyController.updateStoryPut)
-  .delete(storyController.deleteStory);
+  .patch(authController.protect, storyController.updateStoryPatch)
+  .put(authController.protect, storyController.updateStoryPut)
+  .delete(authController.protect, storyController.deleteStory);
 
 // EXPORT
 module.exports = router;

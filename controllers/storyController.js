@@ -35,7 +35,7 @@ exports.createStory = catchAsync(async (req, res, next) => {
   const info = {
     title: req.body.title,
     description: req.body.description,
-    author: req.body.author,
+    author: req.user.username,
   };
 
   const newStory = await Story.create(info);
@@ -51,6 +51,14 @@ exports.createStory = catchAsync(async (req, res, next) => {
 exports.updateStoryPatch = catchAsync(async (req, res, next) => {
   const id = Number(req.params.id);
 
+  const previousStory = await Story.findOne({ where: { id: id }, raw: true });
+
+  if (!previousStory || previousStory.author !== req.user.username) {
+    return next(
+      new AppError('You do not have permission to update this story', 403)
+    );
+  }
+
   const info = {};
   if (req.body.title) {
     info.title = req.body.title;
@@ -59,7 +67,6 @@ exports.updateStoryPatch = catchAsync(async (req, res, next) => {
     info.description = req.body.description;
   }
 
-  console.log(info);
   // first returned array element is the number of rows affected in the update
   const [updatedStoriesCount] = await Story.update(info, {
     where: { id: id },
@@ -85,11 +92,17 @@ exports.updateStoryPatch = catchAsync(async (req, res, next) => {
 exports.updateStoryPut = catchAsync(async (req, res, next) => {
   const id = Number(req.params.id);
 
+  const previousStory = await Story.findOne({ where: { id: id }, raw: true });
+
+  if (!previousStory || previousStory.author !== req.user.username) {
+    return next(
+      new AppError('You do not have permission to update this story', 403)
+    );
+  }
+
   const info = {};
   info.title = req.body.title;
   info.description = req.body.description;
-
-  console.log(info);
 
   const [updatedStoriesCount] = await Story.update(info, {
     where: { id: id },
@@ -114,6 +127,15 @@ exports.updateStoryPut = catchAsync(async (req, res, next) => {
 
 exports.deleteStory = catchAsync(async (req, res, next) => {
   const id = Number(req.params.id);
+
+  const previousStory = await Story.findOne({ where: { id: id }, raw: true });
+
+  if (!previousStory || previousStory.author !== req.user.username) {
+    return next(
+      new AppError('You do not have permission to delete this story', 403)
+    );
+  }
+
   const deletedRowsCount = await Story.destroy({ where: { id: id } }); // returns number of deleted rows
 
   if (!deletedRowsCount) {

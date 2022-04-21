@@ -4,21 +4,22 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 
-const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (username) =>
+  jwt.sign({ username }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, passwordConfirm } = req.body;
+  const { username, name, email, password, passwordConfirm } = req.body;
   const newUser = await User.create({
+    username,
     name,
     email,
     password,
     passwordConfirm,
   });
 
-  const token = signToken(newUser.id);
+  const token = signToken(newUser.username);
 
   delete newUser.dataValues.password;
   delete newUser.dataValues.passwordConfirm;
@@ -33,22 +34,24 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  // 1. Check if email and password exist in req body
-  if (!email || !password) {
-    return next(new AppError('Please provide email and password', 400));
+  // 1. Check if username and password exist in req body
+  if (!username || !password) {
+    return next(new AppError('Please provide username and password', 400));
   }
 
   // 2. Check if user exists in DB and password is correct
-  const user = await User.scope('withPassword').findOne({ where: { email } });
+  const user = await User.scope('withPassword').findOne({
+    where: { username },
+  });
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
 
   // 3. Send token to client
-  const token = signToken(user.id);
+  const token = signToken(user.username);
 
   res.status(200).json({
     status: 'success',
@@ -68,7 +71,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   if (!token) {
     return next(
-      new AppError('The user belonging to this token no longer exists.', 401)
+      new AppError('You are not logged in! Please log in again.', 401)
     );
   }
 
@@ -77,7 +80,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // 3. Check if user still exists
   const freshUser = await User.findOne({
-    where: { id: decoded.id },
+    where: { username: decoded.username },
   });
 
   if (!freshUser) {
@@ -93,7 +96,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // 5. Grand acess to propected route
+  // 5. Grant acess to protected route
   req.user = freshUser.dataValues;
   next();
 });
