@@ -41,25 +41,7 @@ const Story = db.define(
       },
     },
     author: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: 'Author name cannot be null',
-        },
-        notEmpty: {
-          args: true,
-          msg: 'Author name cannot be empty',
-        },
-        len: {
-          args: [1, 50],
-          msg: 'Author name be between 1 and 50 characters',
-        },
-        is: {
-          args: [/^([a-zA-Z]+\s)*[a-zA-Z]+$/],
-          msg: 'Only letters and spaces allowed in author name',
-        },
-      },
+      type: DataTypes.STRING(30),
     },
   },
   {

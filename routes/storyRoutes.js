@@ -1,6 +1,7 @@
 // DEPENDENCIES
 const express = require('express');
 const storyController = require('../controllers/storyController');
+const authController = require('../controllers/authController');
 
 // STORY ROUTER
 const router = express.Router();
@@ -9,14 +10,14 @@ const router = express.Router();
 router
   .route('/')
   .get(storyController.getAllStories)
-  .post(storyController.createStory);
+  .post(authController.protect, storyController.createStory);
 
 router
   .route('/:id')
   .get(storyController.getStory)
-  .patch(storyController.updateStoryPatch)
-  .put(storyController.updateStoryPut)
-  .delete(storyController.deleteStory);
+  .patch(authController.protect, storyController.updateStoryPatch)
+  .put(authController.protect, storyController.updateStoryPut)
+  .delete(authController.protect, storyController.deleteStory);
 
 // EXPORT
 module.exports = router;
