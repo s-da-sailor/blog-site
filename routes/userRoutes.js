@@ -1,9 +1,12 @@
 // DEPENDENCIES
 const express = require('express');
 const userController = require('../controllers/userController');
+const authController = require('../controllers/authController');
 
 // USER ROUTER
 const router = express.Router();
+
+router.post('/signup', authController.signup);
 
 // ROUTES
 router

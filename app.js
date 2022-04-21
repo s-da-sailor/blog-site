@@ -18,7 +18,7 @@ dotenv.config({ path: './config.env' });
 // DATABASE TEST AND RUN
 (async () => {
   try {
-    await db.sync();
+    await db.sync({ force: true });
 
     console.log('Database Connected');
   } catch (err) {
