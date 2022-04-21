@@ -1,6 +1,7 @@
 // DEPENDENCIES
 const express = require('express');
 const storyController = require('../controllers/storyController');
+const authController = require('../controllers/authController');
 
 // STORY ROUTER
 const router = express.Router();
@@ -8,7 +9,7 @@ const router = express.Router();
 // ROUTES
 router
   .route('/')
-  .get(storyController.getAllStories)
+  .get(authController.protect, storyController.getAllStories)
   .post(storyController.createStory);
 
 router

@@ -76,7 +76,7 @@ const User = db.define(
       },
     },
     passwordChangedAt: {
-      type: DataTypes.TIME,
+      type: DataTypes.DATE,
     },
   },
   {
@@ -104,6 +104,19 @@ User.prototype.correctPassword = async function (
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+User.prototype.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimeStamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+
+    return JWTTimestamp < changedTimeStamp;
+  }
+
+  return false;
 };
 
 // EXPORT
