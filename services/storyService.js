@@ -14,3 +14,9 @@ exports.findStoryById = async (id) => {
 };
 
 exports.createStory = async (info) => await Story.create(info);
+
+exports.updateStoryById = async (info, id) => {
+  await Story.update(info, {
+    where: { id },
+  });
+};

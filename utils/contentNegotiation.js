@@ -12,23 +12,14 @@ const jsonToTextPlain = (data) =>
 
 const jsonToHTML = (data) => json2html(JSON.parse(JSON.stringify(data)));
 
-const jsToJson = (data) => JSON.parse(JSON.stringify(data));
-
 exports.serveData = function (data, statusCode, req, res, next) {
+  const dataField = JSON.parse(JSON.stringify(data));
   let dataToServe = {};
-  if (data instanceof Array) {
-    const dataField = [...data];
-
-    dataToServe.status = 'success';
+  dataToServe.status = 'success';
+  if (dataField instanceof Array) {
     dataToServe.results = dataField.length;
-    dataToServe.data = dataField;
-  } else {
-    // eslint-disable-next-line node/no-unsupported-features/es-syntax
-    const dataField = { ...data };
-
-    dataToServe.status = 'success';
-    dataToServe.data = dataField;
   }
+  dataToServe.data = dataField;
 
   if (req.headers.accept && req.headers.accept === 'application/xml') {
     dataToServe = jsToXml(dataToServe);
@@ -40,7 +31,6 @@ exports.serveData = function (data, statusCode, req, res, next) {
     dataToServe = jsonToHTML(dataToServe); // to HTML
     res.setHeader('Content-Type', 'text/html');
   } else {
-    dataToServe = jsToJson(dataToServe); // to JSON
     res.setHeader('Content-Type', 'application/json');
   }
 

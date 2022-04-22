@@ -47,26 +47,16 @@ exports.updateStoryPatch = catchAsync(async (req, res, next) => {
     info.description = req.body.description;
   }
 
-  await Story.update(info, {
-    where: { id: id },
-  });
+  await storyService.updateStoryById(info, req.params.id);
 
-  const updatedStory = await Story.findOne({
-    where: { id: id },
-    raw: true,
-  });
+  const updatedStory = await storyService.findStoryById(req.params.id);
 
   serveData(updatedStory, 200, req, res, next);
 });
 
 exports.updateStoryPut = catchAsync(async (req, res, next) => {
-  const id = Number(req.params.id);
+  const previousStory = await storyService.findStoryById(req.params.id);
 
-  const previousStory = await Story.findOne({ where: { id: id }, raw: true });
-
-  if (!previousStory) {
-    return next(new AppError('No story found with this ID', 404));
-  }
   if (previousStory.author !== req.user.username) {
     return next(
       new AppError('You do not have permission to update this story', 403)
@@ -77,14 +67,15 @@ exports.updateStoryPut = catchAsync(async (req, res, next) => {
   info.title = req.body.title;
   info.description = req.body.description;
 
-  await Story.update(info, {
-    where: { id: id },
-  });
+  await storyService.updateStoryById(info, req.params.id);
 
-  const updatedStory = await Story.findOne({
-    where: { id: id },
-    raw: true,
-  });
+  if (!info.title || !info.description) {
+    return next(
+      new AppError('Please provide a new title and description', 400)
+    );
+  }
+
+  const updatedStory = await storyService.findStoryById(req.params.id);
 
   serveData(updatedStory, 200, req, res, next);
 });
