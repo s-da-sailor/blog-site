@@ -2,17 +2,13 @@
 const User = require('../models/userModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const { serveData } = require('../utils/contentNegotiation');
 
 // CONTROLLERS
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.findAll({ raw: true });
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: {
-      users,
-    },
-  });
+
+  serveData(users, 200, req, res, next);
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
@@ -23,12 +19,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
     return next(new AppError('No user found with that username', 404));
   }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      user,
-    },
-  });
+  serveData(user, 200, req, res, next);
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
@@ -59,12 +50,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     raw: true,
   });
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      user: updatedUser,
-    },
-  });
+  serveData(updatedUser, 200, req, res, next);
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
@@ -83,8 +69,5 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 
   await User.destroy({ where: { username } });
 
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+  serveData(null, 204, req, res, next);
 });

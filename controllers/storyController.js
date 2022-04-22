@@ -9,14 +9,6 @@ exports.getAllStories = catchAsync(async (req, res, next) => {
   const stories = await Story.findAll({ raw: true });
 
   serveData(stories, 200, req, res, next);
-
-  // res.status(200).json({
-  //   status: 'success',
-  //   results: stories.length,
-  //   data: {
-  //     stories,
-  //   },
-  // });
 });
 
 exports.getStory = catchAsync(async (req, res, next) => {
@@ -27,12 +19,7 @@ exports.getStory = catchAsync(async (req, res, next) => {
     return next(new AppError('No story found with that ID', 404));
   }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      story,
-    },
-  });
+  serveData(story, 200, req, res, next);
 });
 
 exports.createStory = catchAsync(async (req, res, next) => {
@@ -44,12 +31,7 @@ exports.createStory = catchAsync(async (req, res, next) => {
 
   const newStory = await Story.create(info);
 
-  res.status(201).json({
-    status: 'success',
-    data: {
-      story: newStory.dataValues,
-    },
-  });
+  serveData(newStory.dataValues, 201, req, res, next);
 });
 
 exports.updateStoryPatch = catchAsync(async (req, res, next) => {
@@ -83,12 +65,7 @@ exports.updateStoryPatch = catchAsync(async (req, res, next) => {
     raw: true,
   });
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      story: updatedStory,
-    },
-  });
+  serveData(updatedStory, 200, req, res, next);
 });
 
 exports.updateStoryPut = catchAsync(async (req, res, next) => {
@@ -118,12 +95,7 @@ exports.updateStoryPut = catchAsync(async (req, res, next) => {
     raw: true,
   });
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      story: updatedStory,
-    },
-  });
+  serveData(updatedStory, 200, req, res, next);
 });
 
 exports.deleteStory = catchAsync(async (req, res, next) => {
@@ -142,8 +114,5 @@ exports.deleteStory = catchAsync(async (req, res, next) => {
 
   await Story.destroy({ where: { id: id } });
 
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+  serveData(null, 204, req, res, next);
 });
