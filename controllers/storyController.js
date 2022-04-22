@@ -2,11 +2,12 @@
 const Story = require('../models/storyModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const storyService = require('../services/storyService');
 const { serveData } = require('../utils/contentNegotiation');
 
 // CONTROLLERS
 exports.getAllStories = catchAsync(async (req, res, next) => {
-  const stories = await Story.findAll({ raw: true });
+  const stories = await storyService.findAllStories(req, res, next);
 
   serveData(stories, 200, req, res, next);
 });
