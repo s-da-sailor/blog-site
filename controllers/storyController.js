@@ -1,38 +1,20 @@
 // DEPENDENCIES
-const Story = require('../models/storyModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const storyService = require('../services/storyService');
 const { serveData } = require('../utils/contentNegotiation');
 
 // CONTROLLERS
 exports.getAllStories = catchAsync(async (req, res, next) => {
-  const stories = await Story.findAll({ raw: true });
+  const stories = await storyService.findAllStories();
 
   serveData(stories, 200, req, res, next);
-
-  // res.status(200).json({
-  //   status: 'success',
-  //   results: stories.length,
-  //   data: {
-  //     stories,
-  //   },
-  // });
 });
 
 exports.getStory = catchAsync(async (req, res, next) => {
-  const id = Number(req.params.id);
-  const story = await Story.findOne({ where: { id: id }, raw: true });
+  const story = await storyService.findStoryById(req.params.id);
 
-  if (!story) {
-    return next(new AppError('No story found with that ID', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      story,
-    },
-  });
+  return serveData(story, 200, req, res, next);
 });
 
 exports.createStory = catchAsync(async (req, res, next) => {
@@ -42,29 +24,13 @@ exports.createStory = catchAsync(async (req, res, next) => {
     author: req.user.username,
   };
 
-  const newStory = await Story.create(info);
+  const newStory = await storyService.createStory(info);
 
-  res.status(201).json({
-    status: 'success',
-    data: {
-      story: newStory.dataValues,
-    },
-  });
+  serveData(newStory.dataValues, 201, req, res, next);
 });
 
 exports.updateStoryPatch = catchAsync(async (req, res, next) => {
-  const id = Number(req.params.id);
-
-  const previousStory = await Story.findOne({ where: { id: id }, raw: true });
-
-  if (!previousStory) {
-    return next(new AppError('No story found with this ID', 404));
-  }
-  if (previousStory.author !== req.user.username) {
-    return next(
-      new AppError('You do not have permission to update this story', 403)
-    );
-  }
+  await storyService.isSameAuthor(req.params.id, req.user.username);
 
   const info = {};
   if (req.body.title) {
@@ -74,76 +40,37 @@ exports.updateStoryPatch = catchAsync(async (req, res, next) => {
     info.description = req.body.description;
   }
 
-  await Story.update(info, {
-    where: { id: id },
-  });
+  await storyService.updateStoryById(info, req.params.id);
 
-  const updatedStory = await Story.findOne({
-    where: { id: id },
-    raw: true,
-  });
+  const updatedStory = await storyService.findStoryById(req.params.id);
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      story: updatedStory,
-    },
-  });
+  serveData(updatedStory, 200, req, res, next);
 });
 
 exports.updateStoryPut = catchAsync(async (req, res, next) => {
-  const id = Number(req.params.id);
-
-  const previousStory = await Story.findOne({ where: { id: id }, raw: true });
-
-  if (!previousStory) {
-    return next(new AppError('No story found with this ID', 404));
-  }
-  if (previousStory.author !== req.user.username) {
-    return next(
-      new AppError('You do not have permission to update this story', 403)
-    );
-  }
+  await storyService.isSameAuthor(req.params.id, req.user.username);
 
   const info = {};
   info.title = req.body.title;
   info.description = req.body.description;
 
-  await Story.update(info, {
-    where: { id: id },
-  });
+  await storyService.updateStoryById(info, req.params.id);
 
-  const updatedStory = await Story.findOne({
-    where: { id: id },
-    raw: true,
-  });
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      story: updatedStory,
-    },
-  });
-});
-
-exports.deleteStory = catchAsync(async (req, res, next) => {
-  const id = Number(req.params.id);
-
-  const previousStory = await Story.findOne({ where: { id: id }, raw: true });
-
-  if (!previousStory) {
-    return next(new AppError('No story found with this ID', 404));
-  }
-  if (!previousStory || previousStory.author !== req.user.username) {
+  if (!info.title || !info.description) {
     return next(
-      new AppError('You do not have permission to delete this story', 403)
+      new AppError('Please provide a new title and description', 400)
     );
   }
 
-  await Story.destroy({ where: { id: id } });
+  const updatedStory = await storyService.findStoryById(req.params.id);
 
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+  serveData(updatedStory, 200, req, res, next);
+});
+
+exports.deleteStory = catchAsync(async (req, res, next) => {
+  await storyService.isSameAuthor(req.params.id, req.user.username);
+
+  await storyService.deleteStoryById(req.params.id);
+
+  serveData(null, 204, req, res, next);
 });

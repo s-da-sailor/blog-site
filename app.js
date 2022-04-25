@@ -5,26 +5,15 @@
 
 // DEPENDENCIES
 const express = require('express');
-const dotenv = require('dotenv');
-const db = require('./config/database');
-const AppError = require('./utils/AppError');
+require('./utils/setConfig');
+const db = require('./database');
 const globalErrorHandler = require('./controllers/errorController');
+const unhandledRouteHandler = require('./utils/unhandledRouteHandler');
 const storyRouter = require('./routes/storyRoutes');
 const userRouter = require('./routes/userRoutes');
 
-// CONFIGURATION FILE
-dotenv.config({ path: './config.env' });
-
 // DATABASE TEST AND RUN
-(async () => {
-  try {
-    await db.sync({ force: true });
-
-    console.log('Database Connected');
-  } catch (err) {
-    console.log(`Error: ${err}`);
-  }
-})();
+db.connect();
 
 // APPLICATION
 const app = express();
@@ -35,11 +24,9 @@ app.use('/api/v1/stories', storyRouter);
 app.use('/api/v1/users', userRouter);
 
 // for unhandled routes
-app.all('*', (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`));
-});
+app.all('*', unhandledRouteHandler);
 
-// global error handling middleware
+// GLOBAL ERROR HANDLER
 app.use(globalErrorHandler);
 
 // EXPORT

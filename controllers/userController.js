@@ -1,90 +1,40 @@
 // DEPENDENCIES
-const User = require('../models/userModel');
-const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const userService = require('../services/userService');
+const { serveData } = require('../utils/contentNegotiation');
 
 // CONTROLLERS
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.findAll({ raw: true });
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: {
-      users,
-    },
-  });
+  const users = await userService.findAllUsers();
+
+  serveData(users, 200, req, res, next);
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const { username } = req.params;
-  const user = await User.findOne({ where: { username }, raw: true });
+  const user = await userService.findUserByUsername(req.params.username);
 
-  if (!user) {
-    return next(new AppError('No user found with that username', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      user,
-    },
-  });
+  serveData(user, 200, req, res, next);
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const { username } = req.params;
-
-  const user = await User.findOne({ where: { username }, raw: true });
-
-  if (!user) {
-    return next(new AppError('No user found with this username', 404));
-  }
-  if (username !== req.user.username) {
-    return next(
-      new AppError('You do not have permission to update this user', 403)
-    );
-  }
+  await userService.isSameUser(req.params.username, req.user.username);
 
   const info = {};
   if (req.body.name) {
     info.name = req.body.name;
   }
 
-  await User.update(info, {
-    where: { username },
-  });
+  await userService.updateUserByUsername(info, req.params.username);
 
-  const updatedUser = await User.findOne({
-    where: { username },
-    raw: true,
-  });
+  const updatedUser = await userService.findUserByUsername(req.params.username);
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      user: updatedUser,
-    },
-  });
+  serveData(updatedUser, 200, req, res, next);
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  const { username } = req.params;
+  await userService.isSameUser(req.params.username, req.user.username);
 
-  const user = await User.findOne({ where: { username }, raw: true });
+  await userService.deleteUserByUsername(req.params.username);
 
-  if (!user) {
-    return next(new AppError('No user found with this username', 404));
-  }
-  if (username !== req.user.username) {
-    return next(
-      new AppError('You do not have permission to delete this user', 403)
-    );
-  }
-
-  await User.destroy({ where: { username } });
-
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+  serveData(null, 204, req, res, next);
 });

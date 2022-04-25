@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const { DataTypes } = require('sequelize');
 const bcrypt = require('bcryptjs');
-const db = require('../config/database');
+const db = require('../database');
 
 // USER MODEL
 const User = db.define(
