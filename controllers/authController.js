@@ -1,3 +1,4 @@
+// DEPENDENCIES
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
@@ -70,6 +71,7 @@ exports.login = catchAsync(async (req, res, next) => {
   createAndSendToken(user, 200, res);
 });
 
+// For getting access to the protected routes
 exports.protect = catchAsync(async (req, res, next) => {
   // 1. If token exists
   let token;
@@ -77,6 +79,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
+    // eslint-disable-next-line prefer-destructuring
     token = req.headers.authorization.split(' ')[1];
   }
 

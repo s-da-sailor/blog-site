@@ -30,7 +30,7 @@ exports.createStory = catchAsync(async (req, res, next) => {
 });
 
 exports.updateStoryPatch = catchAsync(async (req, res, next) => {
-  await storyService.isSameUser(req.params.id, req.user.username);
+  await storyService.isSameAuthor(req.params.id, req.user.username);
 
   const info = {};
   if (req.body.title) {
@@ -48,7 +48,7 @@ exports.updateStoryPatch = catchAsync(async (req, res, next) => {
 });
 
 exports.updateStoryPut = catchAsync(async (req, res, next) => {
-  await storyService.isSameUser(req.params.id, req.user.username);
+  await storyService.isSameAuthor(req.params.id, req.user.username);
 
   const info = {};
   info.title = req.body.title;
@@ -68,7 +68,7 @@ exports.updateStoryPut = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteStory = catchAsync(async (req, res, next) => {
-  await storyService.isSameUser(req.params.id, req.user.username);
+  await storyService.isSameAuthor(req.params.id, req.user.username);
 
   await storyService.deleteStoryById(req.params.id);
 
