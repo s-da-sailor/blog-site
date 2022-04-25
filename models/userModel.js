@@ -93,7 +93,11 @@ const User = db.define(
     },
     passwordConfirm: {
       type: DataTypes.VIRTUAL,
+      allowNull: false,
       validate: {
+        notNull: {
+          msg: 'Please confirm your password',
+        },
         isConfirmed(el) {
           if (el !== this.password) {
             throw new Error('Passwords are not same!');
