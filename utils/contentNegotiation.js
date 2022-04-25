@@ -1,7 +1,9 @@
+// DEPENDENCIES
 const xml2js = require('xml2js');
 const jsonToPlainText = require('json-to-plain-text');
 const json2html = require('json-to-html');
 
+// DATA CONVERSION METHODS
 const jsToXml = (data) => {
   const xmlToJsBuilder = new xml2js.Builder();
   return xmlToJsBuilder.buildObject(data);
@@ -12,6 +14,7 @@ const jsonToTextPlain = (data) =>
 
 const jsonToHTML = (data) => json2html(JSON.parse(JSON.stringify(data)));
 
+// CONTENT NEGOTIATION METHOD
 exports.serveData = function (data, statusCode, req, res, next) {
   const dataField = JSON.parse(JSON.stringify(data));
   let dataToServe = {};

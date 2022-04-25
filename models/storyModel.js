@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const { DataTypes } = require('sequelize');
-const db = require('../config/database');
+const db = require('../database');
 
 // STORY MODEL
 const Story = db.define(
