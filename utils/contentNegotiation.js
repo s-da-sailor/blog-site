@@ -17,6 +17,7 @@ const jsonToHTML = (data) => json2html(JSON.parse(JSON.stringify(data)));
 // CONTENT NEGOTIATION METHOD
 exports.serveData = function (data, statusCode, req, res, next) {
   const dataField = JSON.parse(JSON.stringify(data));
+  console.log(data);
   let dataToServe = {};
   dataToServe.status = 'success';
   if (dataField instanceof Array) {

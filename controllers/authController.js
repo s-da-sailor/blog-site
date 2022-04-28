@@ -4,13 +4,14 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
+const { serveData } = require('../utils/contentNegotiation');
 
 const signToken = (username) =>
   jwt.sign({ username }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createAndSendToken = (user, statusCode, res) => {
+const createAndSendToken = (user, statusCode, req, res, next) => {
   const token = signToken(user.username);
 
   const cookieOptions = {
@@ -23,13 +24,9 @@ const createAndSendToken = (user, statusCode, res) => {
 
   res.cookie('jwt', token, cookieOptions);
 
-  res.status(statusCode).json({
-    status: 'success',
-    token,
-    data: {
-      user,
-    },
-  });
+  user.dataValues.token = token;
+
+  serveData(user, 200, req, res, next);
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -45,7 +42,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   delete newUser.dataValues.password;
   delete newUser.dataValues.passwordConfirm;
 
-  createAndSendToken(newUser, 201, res);
+  createAndSendToken(newUser, 201, req, res, next);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -68,7 +65,7 @@ exports.login = catchAsync(async (req, res, next) => {
   delete user.dataValues.password;
 
   // 3. Send token to client
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res, next);
 });
 
 // For getting access to the protected routes
