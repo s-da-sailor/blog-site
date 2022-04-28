@@ -51,16 +51,16 @@ exports.updateStoryPut = catchAsync(async (req, res, next) => {
   await storyService.isSameAuthor(req.params.id, req.user.username);
 
   const info = {};
-  info.title = req.body.title;
-  info.description = req.body.description;
-
-  await storyService.updateStoryById(info, req.params.id);
+  info.title = req.body.title || '';
+  info.description = req.body.description || '';
 
   if (!info.title || !info.description) {
     return next(
       new AppError('Please provide a new title and description', 400)
     );
   }
+
+  await storyService.updateStoryById(info, req.params.id);
 
   const updatedStory = await storyService.findStoryById(req.params.id);
 
