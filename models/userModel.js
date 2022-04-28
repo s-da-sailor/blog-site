@@ -115,6 +115,7 @@ const User = db.define(
       afterValidate: async function (user) {
         if (user.changed('password')) {
           user.password = await bcrypt.hash(user.password, 12);
+          user.passwordChangedAt = new Date();
         }
       },
     },

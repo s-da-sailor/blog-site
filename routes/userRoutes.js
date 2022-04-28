@@ -15,8 +15,8 @@ router.route('/').get(userController.getAllUsers);
 router
   .route('/:username')
   .get(userController.getUser)
-  .patch(authController.protect, userController.updateUser)
-  .put(authController.protect, userController.updateUser)
+  .patch(authController.protect, userController.updateUserPatch)
+  .put(authController.protect, userController.updateUserPut)
   .delete(authController.protect, userController.deleteUser);
 
 // EXPORT
