@@ -1,6 +1,9 @@
 {
   "extends": ["airbnb", "prettier", "plugin:node/recommended"],
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "jest"],
+  "env": {
+    "jest/globals": true
+  },
   "rules": {
     "node/no-unsupported-features/es-syntax": [
       "error",
