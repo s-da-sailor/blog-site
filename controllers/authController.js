@@ -11,7 +11,7 @@ const signToken = (username) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createAndSendToken = (user, statusCode, req, res, next) => {
+exports.createAndSendToken = (user, statusCode, req, res, next) => {
   const token = signToken(user.username);
 
   const cookieOptions = {
@@ -24,7 +24,7 @@ const createAndSendToken = (user, statusCode, req, res, next) => {
 
   res.cookie('jwt', token, cookieOptions);
 
-  user.dataValues.token = token;
+  user.token = token;
 
   serveData(user, 200, req, res, next);
 };
@@ -42,7 +42,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   delete newUser.dataValues.password;
   delete newUser.dataValues.passwordConfirm;
 
-  createAndSendToken(newUser, 201, req, res, next);
+  exports.createAndSendToken(newUser.dataValues, 201, req, res, next);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -65,7 +65,7 @@ exports.login = catchAsync(async (req, res, next) => {
   delete user.dataValues.password;
 
   // 3. Send token to client
-  createAndSendToken(user, 200, req, res, next);
+  exports.createAndSendToken(user.dataValues, 200, req, res, next);
 });
 
 // For getting access to the protected routes
