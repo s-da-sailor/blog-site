@@ -3,7 +3,7 @@ const storyController = require('../../../controllers/storyController');
 const storyService = require('../../../services/storyService');
 const contentNegotiation = require('../../../utils/contentNegotiation');
 
-const mockResponseFindAllStories = [
+const mockResponseStories = [
   {
     id: 1,
     title: 'Dummy Title 1',
@@ -23,12 +23,12 @@ const mockResponseFindAllStories = [
 ];
 
 describe('Test storyController getAllStories', () => {
-  jest.clearAllMocks();
-
   test('get all stories with status 200', async () => {
+    jest.clearAllMocks();
+
     jest
       .spyOn(storyService, 'findAllStories')
-      .mockImplementation(() => mockResponseFindAllStories);
+      .mockImplementation(() => mockResponseStories);
 
     const mockReq = mockRequest();
     const mockRes = mockResponse();
@@ -37,7 +37,7 @@ describe('Test storyController getAllStories', () => {
     jest
       .spyOn(contentNegotiation, 'serveData')
       .mockImplementation((data, statusCode, req, res, next) => {
-        expect(data).toEqual(mockResponseFindAllStories);
+        expect(data).toEqual(mockResponseStories);
         expect(statusCode).toBe(200);
         expect(req).toEqual(mockReq);
         expect(res).toEqual(mockRes);
@@ -47,6 +47,70 @@ describe('Test storyController getAllStories', () => {
     await storyController.getAllStories(mockReq, mockRes, mockNext);
 
     expect(storyService.findAllStories).toHaveBeenCalledTimes(1);
+    expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Test storyController getStory', () => {
+  test('get a story with status 200 #1', async () => {
+    jest.clearAllMocks();
+
+    jest
+      .spyOn(storyService, 'findStoryById')
+      .mockImplementation((id) => mockResponseStories[id]);
+
+    const mockReq = mockRequest({
+      params: {
+        id: 0,
+      },
+    });
+    const mockRes = mockResponse();
+    const mockNext = '';
+
+    jest
+      .spyOn(contentNegotiation, 'serveData')
+      .mockImplementation((data, statusCode, req, res, next) => {
+        expect(data).toEqual(mockResponseStories[0]);
+        expect(statusCode).toBe(200);
+        expect(req).toEqual(mockReq);
+        expect(res).toEqual(mockRes);
+        expect(next).toEqual(mockNext);
+      });
+
+    await storyController.getStory(mockReq, mockRes, mockNext);
+
+    expect(storyService.findStoryById).toHaveBeenCalledTimes(1);
+    expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
+  });
+
+  test('get a story with status 200 #2', async () => {
+    jest.clearAllMocks();
+
+    jest
+      .spyOn(storyService, 'findStoryById')
+      .mockImplementation((id) => mockResponseStories[id]);
+
+    const mockReq = mockRequest({
+      params: {
+        id: 1,
+      },
+    });
+    const mockRes = mockResponse();
+    const mockNext = '';
+
+    jest
+      .spyOn(contentNegotiation, 'serveData')
+      .mockImplementation((data, statusCode, req, res, next) => {
+        expect(data).toEqual(mockResponseStories[1]);
+        expect(statusCode).toBe(200);
+        expect(req).toEqual(mockReq);
+        expect(res).toEqual(mockRes);
+        expect(next).toEqual(mockNext);
+      });
+
+    await storyController.getStory(mockReq, mockRes, mockNext);
+
+    expect(storyService.findStoryById).toHaveBeenCalledTimes(1);
     expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
   });
 });
