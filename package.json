@@ -25,9 +25,11 @@
     "json-to-html": "^0.1.2",
     "json-to-plain-text": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
+    "mock-req-res": "^1.2.0",
     "mysql2": "^2.3.3",
     "node-json2html": "^2.2.2",
     "sequelize": "^6.18.0",
+    "sinon": "^13.0.2",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
