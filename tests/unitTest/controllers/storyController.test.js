@@ -33,6 +33,15 @@ const mockResponseCreateStory = {
   },
 };
 
+const mockResponsefindStoryById = {
+  id: 4,
+  title: 'Dummy Title 4',
+  description: 'Dummy Description 4',
+  author: 'dummyUsername4',
+  createdAt: '2022-05-05T13:35:52.000Z',
+  updatedAt: '2022-05-05T13:36:12.000Z',
+};
+
 describe('Test storyController getAllStories', () => {
   test('get all stories with status 200', async () => {
     jest.clearAllMocks();
@@ -168,6 +177,68 @@ describe('Test storyController createStory', () => {
     await storyController.createStory(mockReq, mockRes, mockNext);
 
     expect(storyService.createStory).toHaveBeenCalledTimes(1);
+    expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Test storyController updateStoryPatch', () => {
+  test('update a story with status 200', async () => {
+    jest.clearAllMocks();
+
+    const mockReq = mockRequest({
+      params: {
+        id: '4',
+      },
+      body: {
+        title: 'Dummy Title 4',
+        description: 'Dummy Description 4',
+      },
+      user: {
+        username: 'dummyUsername4',
+        name: 'Dummy Name D',
+        email: 'dummyEmail4@dummymail.com',
+        passwordChangedAt: '2022-05-05T13:36:12.000Z',
+        createdAt: '2022-05-05T13:35:52.000Z',
+        updatedAt: '2022-05-05T13:36:12.000Z',
+      },
+    });
+    const mockRes = mockResponse();
+    const mockNext = '';
+
+    jest
+      .spyOn(storyService, 'isSameAuthor')
+      .mockImplementation((id, username) => {
+        expect(id).toBe('4');
+        expect(username).toBe('dummyUsername4');
+      });
+
+    jest
+      .spyOn(storyService, 'updateStoryById')
+      .mockImplementation((info, id) => {
+        expect(info.title).toBe('Dummy Title 4');
+        expect(info.description).toBe('Dummy Description 4');
+        expect(id).toBe('4');
+      });
+
+    jest.spyOn(storyService, 'findStoryById').mockImplementation((id) => {
+      expect(id).toBe('4');
+      return mockResponsefindStoryById;
+    });
+
+    jest
+      .spyOn(contentNegotiation, 'serveData')
+      .mockImplementation((data, statusCode, req, res, next) => {
+        expect(data).toEqual(mockResponsefindStoryById);
+        expect(statusCode).toBe(200);
+        expect(req).toEqual(mockReq);
+        expect(res).toEqual(mockRes);
+        expect(next).toEqual(mockNext);
+      });
+
+    await storyController.updateStoryPatch(mockReq, mockRes, mockNext);
+
+    expect(storyService.isSameAuthor).toHaveBeenCalledTimes(1);
+    expect(storyService.updateStoryById).toHaveBeenCalledTimes(1);
     expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
   });
 });
