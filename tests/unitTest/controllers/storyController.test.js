@@ -22,6 +22,17 @@ const mockResponseStories = [
   },
 ];
 
+const mockResponseCreateStory = {
+  dataValues: {
+    id: 3,
+    title: 'Dummy Title 3',
+    description: 'Dummy Description 3',
+    author: 'dummyUsername3',
+    updatedAt: '2022-05-05T12:42:54.000Z',
+    createdAt: '2022-05-05T12:42:54.000Z',
+  },
+};
+
 describe('Test storyController getAllStories', () => {
   test('get all stories with status 200', async () => {
     jest.clearAllMocks();
@@ -111,6 +122,52 @@ describe('Test storyController getStory', () => {
     await storyController.getStory(mockReq, mockRes, mockNext);
 
     expect(storyService.findStoryById).toHaveBeenCalledTimes(1);
+    expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Test storyController createStory', () => {
+  test('create a new story with status 201', async () => {
+    jest.clearAllMocks();
+
+    const mockReq = mockRequest({
+      body: {
+        title: 'Dummy Title 3',
+        description: 'Dummy Description 3',
+      },
+      user: {
+        username: 'dummyUsername3',
+        name: 'Dummy Name C',
+        email: 'dummyEmail3@dummymail.com',
+        passwordChangedAt: '2022-05-05T12:42:55.000Z',
+        createdAt: '2022-05-05T12:42:54.000Z',
+        updatedAt: '2022-05-05T12:42:54.000Z',
+      },
+    });
+    const mockRes = mockResponse();
+    const mockNext = '';
+
+    jest.spyOn(storyService, 'createStory').mockImplementation((info) => {
+      expect(info.title).toBe('Dummy Title 3');
+      expect(info.description).toBe('Dummy Description 3');
+      expect(info.author).toBe('dummyUsername3');
+
+      return mockResponseCreateStory;
+    });
+
+    jest
+      .spyOn(contentNegotiation, 'serveData')
+      .mockImplementation((data, statusCode, req, res, next) => {
+        expect(data).toEqual(mockResponseCreateStory.dataValues);
+        expect(statusCode).toBe(201);
+        expect(req).toEqual(mockReq);
+        expect(res).toEqual(mockRes);
+        expect(next).toEqual(mockNext);
+      });
+
+    await storyController.createStory(mockReq, mockRes, mockNext);
+
+    expect(storyService.createStory).toHaveBeenCalledTimes(1);
     expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
   });
 });

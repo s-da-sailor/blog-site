@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1651746339310" clover="3.2.0">
-  <project timestamp="1651746339310" name="All files">
-    <metrics statements="106" coveredstatements="41" conditionals="34" coveredconditionals="0" methods="20" coveredmethods="4" elements="160" coveredelements="45" complexity="0" loc="106" ncloc="106" packages="5" files="7" classes="7"/>
+<coverage generated="1651756654892" clover="3.2.0">
+  <project timestamp="1651756654892" name="All files">
+    <metrics statements="106" coveredstatements="44" conditionals="34" coveredconditionals="0" methods="20" coveredmethods="5" elements="160" coveredelements="49" complexity="0" loc="106" ncloc="106" packages="5" files="7" classes="7"/>
     <package name="blog-site">
       <metrics statements="8" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
       <file name="database.js" path="C:\Github Repos\blog-site\database.js">
@@ -17,9 +17,9 @@
       </file>
     </package>
     <package name="blog-site.controllers">
-      <metrics statements="38" coveredstatements="14" conditionals="12" coveredconditionals="0" methods="6" coveredmethods="2"/>
+      <metrics statements="38" coveredstatements="17" conditionals="12" coveredconditionals="0" methods="6" coveredmethods="3"/>
       <file name="storyController.js" path="C:\Github Repos\blog-site\controllers\storyController.js">
-        <metrics statements="38" coveredstatements="14" conditionals="12" coveredconditionals="0" methods="6" coveredmethods="2"/>
+        <metrics statements="38" coveredstatements="17" conditionals="12" coveredconditionals="0" methods="6" coveredmethods="3"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -31,9 +31,9 @@
         <line num="15" count="2" type="stmt"/>
         <line num="17" count="2" type="stmt"/>
         <line num="20" count="1" type="stmt"/>
-        <line num="21" count="0" type="stmt"/>
-        <line num="27" count="0" type="stmt"/>
-        <line num="29" count="0" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
         <line num="32" count="1" type="stmt"/>
         <line num="33" count="0" type="stmt"/>
         <line num="35" count="0" type="stmt"/>
@@ -109,8 +109,8 @@
       <file name="catchAsync.js" path="C:\Github Repos\blog-site\utils\catchAsync.js">
         <metrics statements="4" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="6" type="stmt"/>
-        <line num="2" count="3" type="stmt"/>
-        <line num="3" count="3" type="stmt"/>
+        <line num="2" count="4" type="stmt"/>
+        <line num="3" count="4" type="stmt"/>
         <line num="5" count="0" type="stmt"/>
       </file>
       <file name="contentNegotiation.js" path="C:\Github Repos\blog-site\utils\contentNegotiation.js">
