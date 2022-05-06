@@ -1,21 +1,20 @@
 // DEPENDENCIES
 const catchAsync = require('../utils/catchAsync');
 const userService = require('../services/userService');
-const { serveData } = require('../utils/contentNegotiation');
+const contentNegotiation = require('../utils/contentNegotiation');
 const AppError = require('../utils/AppError');
 const { createAndSendToken } = require('./authController');
 
 // CONTROLLERS
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await userService.findAllUsers();
-
-  serveData(users, 200, req, res, next);
+  contentNegotiation.serveData(users, 200, req, res, next);
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await userService.findUserByUsername(req.params.username);
 
-  serveData(user, 200, req, res, next);
+  contentNegotiation.serveData(user, 200, req, res, next);
 });
 
 exports.updateUserPatch = catchAsync(async (req, res, next) => {
@@ -41,7 +40,7 @@ exports.updateUserPatch = catchAsync(async (req, res, next) => {
   if (updatedUser && info.password) {
     createAndSendToken(updatedUser, 200, req, res, next);
   } else {
-    serveData(updatedUser, 200, req, res, next);
+    contentNegotiation.serveData(updatedUser, 200, req, res, next);
   }
 });
 
@@ -72,7 +71,7 @@ exports.updateUserPut = catchAsync(async (req, res, next) => {
   if (updatedUser && info.password) {
     createAndSendToken(updatedUser, 200, req, res, next);
   } else {
-    serveData(updatedUser, 200, req, res, next);
+    contentNegotiation.serveData(updatedUser, 200, req, res, next);
   }
 });
 
@@ -81,5 +80,5 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 
   await userService.deleteUserByUsername(req.params.username);
 
-  serveData(null, 204, req, res, next);
+  contentNegotiation.serveData(null, 204, req, res, next);
 });

@@ -75,9 +75,10 @@ describe('Test storyController getStory', () => {
   test('get a story with status 200 #1', async () => {
     jest.clearAllMocks();
 
-    jest
-      .spyOn(storyService, 'findStoryById')
-      .mockImplementation((id) => mockResponseStories[id]);
+    jest.spyOn(storyService, 'findStoryById').mockImplementation((id) => {
+      expect(id).toBe(0);
+      return mockResponseStories[id];
+    });
 
     const mockReq = mockRequest({
       params: {
@@ -106,9 +107,10 @@ describe('Test storyController getStory', () => {
   test('get a story with status 200 #2', async () => {
     jest.clearAllMocks();
 
-    jest
-      .spyOn(storyService, 'findStoryById')
-      .mockImplementation((id) => mockResponseStories[id]);
+    jest.spyOn(storyService, 'findStoryById').mockImplementation((id) => {
+      expect(id).toBe(1);
+      return mockResponseStories[id];
+    });
 
     const mockReq = mockRequest({
       params: {
