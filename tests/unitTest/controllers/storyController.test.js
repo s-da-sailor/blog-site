@@ -52,7 +52,7 @@ describe('Test storyController getAllStories', () => {
 
     const mockReq = mockRequest();
     const mockRes = mockResponse();
-    const mockNext = '';
+    const mockNext = jest.fn();
 
     jest
       .spyOn(contentNegotiation, 'serveData')
@@ -85,7 +85,7 @@ describe('Test storyController getStory', () => {
       },
     });
     const mockRes = mockResponse();
-    const mockNext = '';
+    const mockNext = jest.fn();
 
     jest
       .spyOn(contentNegotiation, 'serveData')
@@ -116,7 +116,7 @@ describe('Test storyController getStory', () => {
       },
     });
     const mockRes = mockResponse();
-    const mockNext = '';
+    const mockNext = jest.fn();
 
     jest
       .spyOn(contentNegotiation, 'serveData')
@@ -154,7 +154,7 @@ describe('Test storyController createStory', () => {
       },
     });
     const mockRes = mockResponse();
-    const mockNext = '';
+    const mockNext = jest.fn();
 
     jest.spyOn(storyService, 'createStory').mockImplementation((info) => {
       expect(info.title).toBe('Dummy Title 3');
@@ -203,7 +203,7 @@ describe('Test storyController updateStoryPatch', () => {
       },
     });
     const mockRes = mockResponse();
-    const mockNext = '';
+    const mockNext = jest.fn();
 
     jest
       .spyOn(storyService, 'isSameAuthor')
@@ -239,6 +239,353 @@ describe('Test storyController updateStoryPatch', () => {
 
     expect(storyService.isSameAuthor).toHaveBeenCalledTimes(1);
     expect(storyService.updateStoryById).toHaveBeenCalledTimes(1);
+    expect(storyService.findStoryById).toHaveBeenCalledTimes(1);
+    expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
+  });
+
+  test('update a story with status 200 (empty title)', async () => {
+    jest.clearAllMocks();
+
+    const mockReq = mockRequest({
+      params: {
+        id: '4',
+      },
+      body: {
+        description: 'Dummy Description 4',
+      },
+      user: {
+        username: 'dummyUsername4',
+        name: 'Dummy Name D',
+        email: 'dummyEmail4@dummymail.com',
+        passwordChangedAt: '2022-05-05T13:36:12.000Z',
+        createdAt: '2022-05-05T13:35:52.000Z',
+        updatedAt: '2022-05-05T13:36:12.000Z',
+      },
+    });
+    const mockRes = mockResponse();
+    const mockNext = jest.fn();
+
+    jest
+      .spyOn(storyService, 'isSameAuthor')
+      .mockImplementation((id, username) => {
+        expect(id).toBe('4');
+        expect(username).toBe('dummyUsername4');
+      });
+
+    jest
+      .spyOn(storyService, 'updateStoryById')
+      .mockImplementation((info, id) => {
+        expect(info.description).toBe('Dummy Description 4');
+        expect(id).toBe('4');
+      });
+
+    jest.spyOn(storyService, 'findStoryById').mockImplementation((id) => {
+      expect(id).toBe('4');
+      return mockResponsefindStoryById;
+    });
+
+    jest
+      .spyOn(contentNegotiation, 'serveData')
+      .mockImplementation((data, statusCode, req, res, next) => {
+        expect(data).toEqual(mockResponsefindStoryById);
+        expect(statusCode).toBe(200);
+        expect(req).toEqual(mockReq);
+        expect(res).toEqual(mockRes);
+        expect(next).toEqual(mockNext);
+      });
+
+    await storyController.updateStoryPatch(mockReq, mockRes, mockNext);
+
+    expect(storyService.isSameAuthor).toHaveBeenCalledTimes(1);
+    expect(storyService.updateStoryById).toHaveBeenCalledTimes(1);
+    expect(storyService.findStoryById).toHaveBeenCalledTimes(1);
+    expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
+  });
+
+  test('update a story with status 200 (empty description)', async () => {
+    jest.clearAllMocks();
+
+    const mockReq = mockRequest({
+      params: {
+        id: '4',
+      },
+      body: {
+        title: 'Dummy Title 4',
+      },
+      user: {
+        username: 'dummyUsername4',
+        name: 'Dummy Name D',
+        email: 'dummyEmail4@dummymail.com',
+        passwordChangedAt: '2022-05-05T13:36:12.000Z',
+        createdAt: '2022-05-05T13:35:52.000Z',
+        updatedAt: '2022-05-05T13:36:12.000Z',
+      },
+    });
+    const mockRes = mockResponse();
+    const mockNext = jest.fn();
+
+    jest
+      .spyOn(storyService, 'isSameAuthor')
+      .mockImplementation((id, username) => {
+        expect(id).toBe('4');
+        expect(username).toBe('dummyUsername4');
+      });
+
+    jest
+      .spyOn(storyService, 'updateStoryById')
+      .mockImplementation((info, id) => {
+        expect(info.title).toBe('Dummy Title 4');
+        expect(id).toBe('4');
+      });
+
+    jest.spyOn(storyService, 'findStoryById').mockImplementation((id) => {
+      expect(id).toBe('4');
+      return mockResponsefindStoryById;
+    });
+
+    jest
+      .spyOn(contentNegotiation, 'serveData')
+      .mockImplementation((data, statusCode, req, res, next) => {
+        expect(data).toEqual(mockResponsefindStoryById);
+        expect(statusCode).toBe(200);
+        expect(req).toEqual(mockReq);
+        expect(res).toEqual(mockRes);
+        expect(next).toEqual(mockNext);
+      });
+
+    await storyController.updateStoryPatch(mockReq, mockRes, mockNext);
+
+    expect(storyService.isSameAuthor).toHaveBeenCalledTimes(1);
+    expect(storyService.updateStoryById).toHaveBeenCalledTimes(1);
+    expect(storyService.findStoryById).toHaveBeenCalledTimes(1);
+    expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Test storyController updateStoryPut', () => {
+  test('update a story with status 200', async () => {
+    jest.clearAllMocks();
+
+    const mockReq = mockRequest({
+      params: {
+        id: '4',
+      },
+      body: {
+        title: 'Dummy Title 4',
+        description: 'Dummy Description 4',
+      },
+      user: {
+        username: 'dummyUsername4',
+        name: 'Dummy Name D',
+        email: 'dummyEmail4@dummymail.com',
+        passwordChangedAt: '2022-05-05T13:36:12.000Z',
+        createdAt: '2022-05-05T13:35:52.000Z',
+        updatedAt: '2022-05-05T13:36:12.000Z',
+      },
+    });
+    const mockRes = mockResponse();
+    const mockNext = jest.fn();
+
+    jest
+      .spyOn(storyService, 'isSameAuthor')
+      .mockImplementation((id, username) => {
+        expect(id).toBe('4');
+        expect(username).toBe('dummyUsername4');
+      });
+
+    jest
+      .spyOn(storyService, 'updateStoryById')
+      .mockImplementation((info, id) => {
+        expect(info.title).toBe('Dummy Title 4');
+        expect(info.description).toBe('Dummy Description 4');
+        expect(id).toBe('4');
+      });
+
+    jest.spyOn(storyService, 'findStoryById').mockImplementation((id) => {
+      expect(id).toBe('4');
+      return mockResponsefindStoryById;
+    });
+
+    jest
+      .spyOn(contentNegotiation, 'serveData')
+      .mockImplementation((data, statusCode, req, res, next) => {
+        expect(data).toEqual(mockResponsefindStoryById);
+        expect(statusCode).toBe(200);
+        expect(req).toEqual(mockReq);
+        expect(res).toEqual(mockRes);
+        expect(next).toEqual(mockNext);
+      });
+
+    await storyController.updateStoryPut(mockReq, mockRes, mockNext);
+
+    expect(storyService.isSameAuthor).toHaveBeenCalledTimes(1);
+    expect(storyService.updateStoryById).toHaveBeenCalledTimes(1);
+    expect(storyService.findStoryById).toHaveBeenCalledTimes(1);
+    expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
+  });
+
+  test('Empty Title, Throw Error', async () => {
+    jest.clearAllMocks();
+
+    const mockReq = mockRequest({
+      params: {
+        id: '4',
+      },
+      body: {
+        description: 'Dummy Description 4',
+      },
+      user: {
+        username: 'dummyUsername4',
+        name: 'Dummy Name D',
+        email: 'dummyEmail4@dummymail.com',
+        passwordChangedAt: '2022-05-05T13:36:12.000Z',
+        createdAt: '2022-05-05T13:35:52.000Z',
+        updatedAt: '2022-05-05T13:36:12.000Z',
+      },
+    });
+    const mockRes = mockResponse();
+    const mockNext = jest.fn();
+
+    jest
+      .spyOn(storyService, 'isSameAuthor')
+      .mockImplementation((id, username) => {
+        expect(id).toBe('4');
+        expect(username).toBe('dummyUsername4');
+      });
+
+    jest
+      .spyOn(storyService, 'updateStoryById')
+      .mockImplementation((info, id) => {
+        expect(info.title).toBe('Dummy Title 4');
+        expect(info.description).toBe('Dummy Description 4');
+        expect(id).toBe('4');
+      });
+
+    jest.spyOn(storyService, 'findStoryById').mockImplementation((id) => {
+      expect(id).toBe('4');
+      return mockResponsefindStoryById;
+    });
+
+    jest
+      .spyOn(contentNegotiation, 'serveData')
+      .mockImplementation((data, statusCode, req, res, next) => {
+        expect(data).toEqual(mockResponsefindStoryById);
+        expect(statusCode).toBe(200);
+        expect(req).toEqual(mockReq);
+        expect(res).toEqual(mockRes);
+        expect(next).toEqual(mockNext);
+      });
+
+    await storyController.updateStoryPut(mockReq, mockRes, mockNext);
+
+    expect(storyService.isSameAuthor).toHaveBeenCalledTimes(1);
+    expect(mockNext).toHaveBeenCalledTimes(1);
+  });
+
+  test('Empty Description, Throw Error', async () => {
+    jest.clearAllMocks();
+
+    const mockReq = mockRequest({
+      params: {
+        id: '4',
+      },
+      body: {
+        title: 'Dummy Title 4',
+      },
+      user: {
+        username: 'dummyUsername4',
+        name: 'Dummy Name D',
+        email: 'dummyEmail4@dummymail.com',
+        passwordChangedAt: '2022-05-05T13:36:12.000Z',
+        createdAt: '2022-05-05T13:35:52.000Z',
+        updatedAt: '2022-05-05T13:36:12.000Z',
+      },
+    });
+    const mockRes = mockResponse();
+    const mockNext = jest.fn();
+
+    jest
+      .spyOn(storyService, 'isSameAuthor')
+      .mockImplementation((id, username) => {
+        expect(id).toBe('4');
+        expect(username).toBe('dummyUsername4');
+      });
+
+    jest
+      .spyOn(storyService, 'updateStoryById')
+      .mockImplementation((info, id) => {
+        expect(info.title).toBe('Dummy Title 4');
+        expect(info.description).toBe('Dummy Description 4');
+        expect(id).toBe('4');
+      });
+
+    jest.spyOn(storyService, 'findStoryById').mockImplementation((id) => {
+      expect(id).toBe('4');
+      return mockResponsefindStoryById;
+    });
+
+    jest
+      .spyOn(contentNegotiation, 'serveData')
+      .mockImplementation((data, statusCode, req, res, next) => {
+        expect(data).toEqual(mockResponsefindStoryById);
+        expect(statusCode).toBe(200);
+        expect(req).toEqual(mockReq);
+        expect(res).toEqual(mockRes);
+        expect(next).toEqual(mockNext);
+      });
+
+    await storyController.updateStoryPut(mockReq, mockRes, mockNext);
+
+    expect(storyService.isSameAuthor).toHaveBeenCalledTimes(1);
+    expect(mockNext).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Test storyController deleteStory', () => {
+  test('delete a story with status 204', async () => {
+    jest.clearAllMocks();
+
+    const mockReq = mockRequest({
+      params: {
+        id: '5',
+      },
+      user: {
+        username: 'dummyUsername5',
+        name: 'Dummy Name E',
+        email: 'dummyEmail5@dummymail.com',
+        passwordChangedAt: '2022-05-05T14:36:12.000Z',
+        createdAt: '2022-05-05T14:35:52.000Z',
+        updatedAt: '2022-05-05T14:36:12.000Z',
+      },
+    });
+    const mockRes = mockResponse();
+    const mockNext = jest.fn();
+
+    jest
+      .spyOn(storyService, 'isSameAuthor')
+      .mockImplementation((id, username) => {
+        expect(id).toBe('5');
+        expect(username).toBe('dummyUsername5');
+      });
+
+    jest.spyOn(storyService, 'deleteStoryById').mockImplementation((id) => {
+      expect(id).toBe('5');
+    });
+
+    jest
+      .spyOn(contentNegotiation, 'serveData')
+      .mockImplementation((data, statusCode, req, res, next) => {
+        expect(data).toEqual(null);
+        expect(statusCode).toBe(204);
+        expect(req).toEqual(mockReq);
+        expect(res).toEqual(mockRes);
+        expect(next).toEqual(mockNext);
+      });
+
+    await storyController.deleteStory(mockReq, mockRes, mockNext);
+
+    expect(storyService.isSameAuthor).toHaveBeenCalledTimes(1);
+    expect(storyService.deleteStoryById).toHaveBeenCalledTimes(1);
     expect(contentNegotiation.serveData).toHaveBeenCalledTimes(1);
   });
 });

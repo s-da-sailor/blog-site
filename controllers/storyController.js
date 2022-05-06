@@ -44,8 +44,6 @@ exports.updateStoryPatch = catchAsync(async (req, res, next) => {
 
   const updatedStory = await storyService.findStoryById(req.params.id);
 
-  console.log(updatedStory);
-
   contentNegotiation.serveData(updatedStory, 200, req, res, next);
 });
 
