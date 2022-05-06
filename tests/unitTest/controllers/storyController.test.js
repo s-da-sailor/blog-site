@@ -149,7 +149,7 @@ describe('Test storyController createStory', () => {
       user: {
         username: 'dummyUsername3',
         name: 'Dummy Name C',
-        email: 'dummyEmail3@dummymail.com',
+        email: 'dummyemail3@dummymail.com',
         passwordChangedAt: '2022-05-05T12:42:55.000Z',
         createdAt: '2022-05-05T12:42:54.000Z',
         updatedAt: '2022-05-05T12:42:54.000Z',
@@ -198,7 +198,7 @@ describe('Test storyController updateStoryPatch', () => {
       user: {
         username: 'dummyUsername4',
         name: 'Dummy Name D',
-        email: 'dummyEmail4@dummymail.com',
+        email: 'dummyemail4@dummymail.com',
         passwordChangedAt: '2022-05-05T13:36:12.000Z',
         createdAt: '2022-05-05T13:35:52.000Z',
         updatedAt: '2022-05-05T13:36:12.000Z',
@@ -258,7 +258,7 @@ describe('Test storyController updateStoryPatch', () => {
       user: {
         username: 'dummyUsername4',
         name: 'Dummy Name D',
-        email: 'dummyEmail4@dummymail.com',
+        email: 'dummyemail4@dummymail.com',
         passwordChangedAt: '2022-05-05T13:36:12.000Z',
         createdAt: '2022-05-05T13:35:52.000Z',
         updatedAt: '2022-05-05T13:36:12.000Z',
@@ -317,7 +317,7 @@ describe('Test storyController updateStoryPatch', () => {
       user: {
         username: 'dummyUsername4',
         name: 'Dummy Name D',
-        email: 'dummyEmail4@dummymail.com',
+        email: 'dummyemail4@dummymail.com',
         passwordChangedAt: '2022-05-05T13:36:12.000Z',
         createdAt: '2022-05-05T13:35:52.000Z',
         updatedAt: '2022-05-05T13:36:12.000Z',
@@ -379,7 +379,7 @@ describe('Test storyController updateStoryPut', () => {
       user: {
         username: 'dummyUsername4',
         name: 'Dummy Name D',
-        email: 'dummyEmail4@dummymail.com',
+        email: 'dummyemail4@dummymail.com',
         passwordChangedAt: '2022-05-05T13:36:12.000Z',
         createdAt: '2022-05-05T13:35:52.000Z',
         updatedAt: '2022-05-05T13:36:12.000Z',
@@ -439,7 +439,7 @@ describe('Test storyController updateStoryPut', () => {
       user: {
         username: 'dummyUsername4',
         name: 'Dummy Name D',
-        email: 'dummyEmail4@dummymail.com',
+        email: 'dummyemail4@dummymail.com',
         passwordChangedAt: '2022-05-05T13:36:12.000Z',
         createdAt: '2022-05-05T13:35:52.000Z',
         updatedAt: '2022-05-05T13:36:12.000Z',
@@ -497,7 +497,7 @@ describe('Test storyController updateStoryPut', () => {
       user: {
         username: 'dummyUsername4',
         name: 'Dummy Name D',
-        email: 'dummyEmail4@dummymail.com',
+        email: 'dummyemail4@dummymail.com',
         passwordChangedAt: '2022-05-05T13:36:12.000Z',
         createdAt: '2022-05-05T13:35:52.000Z',
         updatedAt: '2022-05-05T13:36:12.000Z',
@@ -554,7 +554,7 @@ describe('Test storyController deleteStory', () => {
       user: {
         username: 'dummyUsername5',
         name: 'Dummy Name E',
-        email: 'dummyEmail5@dummymail.com',
+        email: 'dummyemail5@dummymail.com',
         passwordChangedAt: '2022-05-05T14:36:12.000Z',
         createdAt: '2022-05-05T14:35:52.000Z',
         updatedAt: '2022-05-05T14:36:12.000Z',

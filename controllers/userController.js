@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const userService = require('../services/userService');
 const contentNegotiation = require('../utils/contentNegotiation');
 const AppError = require('../utils/AppError');
-const { createAndSendToken } = require('./authController');
+const authController = require('./authController');
 
 // CONTROLLERS
 exports.getAllUsers = catchAsync(async (req, res, next) => {
@@ -28,8 +28,8 @@ exports.updateUserPatch = catchAsync(async (req, res, next) => {
     info.email = req.body.email;
   }
   if (req.body.password || req.body.passwordConfirm) {
-    info.password = req.body.password || '';
-    info.passwordConfirm = req.body.passwordConfirm || '';
+    info.password = req.body.password;
+    info.passwordConfirm = req.body.passwordConfirm;
     info.passwordChangedAt = new Date();
   }
 
@@ -38,7 +38,7 @@ exports.updateUserPatch = catchAsync(async (req, res, next) => {
   const updatedUser = await userService.findUserByUsername(req.params.username);
 
   if (updatedUser && info.password) {
-    createAndSendToken(updatedUser, 200, req, res, next);
+    authController.createAndSendToken(updatedUser, 200, req, res, next);
   } else {
     contentNegotiation.serveData(updatedUser, 200, req, res, next);
   }
@@ -68,11 +68,7 @@ exports.updateUserPut = catchAsync(async (req, res, next) => {
 
   const updatedUser = await userService.findUserByUsername(req.params.username);
 
-  if (updatedUser && info.password) {
-    createAndSendToken(updatedUser, 200, req, res, next);
-  } else {
-    contentNegotiation.serveData(updatedUser, 200, req, res, next);
-  }
+  authController.createAndSendToken(updatedUser, 200, req, res, next);
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {

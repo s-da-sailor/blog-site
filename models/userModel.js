@@ -89,6 +89,11 @@ const User = db.define(
           args: [8, 50],
           msg: 'Password must be between 8 and 50 characters',
         },
+        isConfirmed(el) {
+          if (el !== this.passwordConfirm) {
+            throw new Error('Passwords are not same!');
+          }
+        },
       },
     },
     passwordConfirm: {
