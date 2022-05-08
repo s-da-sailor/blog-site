@@ -4,15 +4,15 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
-const { serveData } = require('../utils/contentNegotiation');
+const contentNegotiation = require('../utils/contentNegotiation');
 
-const signToken = (username) =>
+exports.signToken = (username) =>
   jwt.sign({ username }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
 exports.createAndSendToken = (user, statusCode, req, res, next) => {
-  const token = signToken(user.username);
+  const token = exports.signToken(user.username);
 
   const cookieOptions = {
     expires: new Date(
@@ -26,7 +26,7 @@ exports.createAndSendToken = (user, statusCode, req, res, next) => {
 
   user.token = token;
 
-  serveData(user, 200, req, res, next);
+  contentNegotiation.serveData(user, 200, req, res, next);
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
