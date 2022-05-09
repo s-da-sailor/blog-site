@@ -15,6 +15,30 @@ exports.findUserByUsername = async (username) => {
   return user;
 };
 
+exports.findUserByUsernameInstance = async (username) => {
+  const user = await User.findOne({ where: { username } });
+
+  if (!user) {
+    throw new AppError('No user found with that username', 404);
+  }
+
+  return user;
+};
+
+exports.findUserByUsernameWithPassword = async (username) => {
+  const user = await User.scope('withPassword').findOne({
+    where: { username },
+  });
+
+  if (!user) {
+    throw new AppError('No user found with that username', 404);
+  }
+
+  return user;
+};
+
+exports.createUser = async (info) => await User.create(info);
+
 exports.updateUserByUsername = async (info, username) => {
   await User.update(info, {
     where: { username },
@@ -35,4 +59,8 @@ exports.isSameUser = async (id, username) => {
   if (user.username !== username) {
     throw new AppError('You do not have permission!', 403);
   }
+};
+
+exports.correctPassword = async function (candidatePassword, userPassword) {
+  return await User.prototype.correctPassword(candidatePassword, userPassword);
 };
