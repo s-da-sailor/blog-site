@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
-const User = require('../models/userModel');
+const userService = require('../services/userService');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 const contentNegotiation = require('../utils/contentNegotiation');
@@ -31,7 +31,7 @@ exports.createAndSendToken = (user, statusCode, req, res, next) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
   const { username, name, email, password, passwordConfirm } = req.body;
-  const newUser = await User.create({
+  const newUser = await userService.createUser({
     username,
     name,
     email,
@@ -54,11 +54,11 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // 2. Check if user exists in DB and password is correct
-  const user = await User.scope('withPassword').findOne({
-    where: { username },
-  });
+  const user = await userService.findUserByUsernameWithPassword(username);
 
-  if (!user || !(await user.correctPassword(password, user.password))) {
+  if (
+    !(await userService.correctPassword(password, user.dataValues.password))
+  ) {
     return next(new AppError('Incorrect email or password', 401));
   }
 
@@ -90,9 +90,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   // 3. Check if user still exists
-  const freshUser = await User.findOne({
-    where: { username: decoded.username },
-  });
+  const freshUser = await userService.findUserByUsernameInstance(
+    decoded.username
+  );
 
   if (!freshUser) {
     return next(
