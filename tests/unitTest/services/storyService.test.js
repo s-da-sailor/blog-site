@@ -80,7 +80,7 @@ describe('Test storyService createStory', () => {
 });
 
 describe('Test storyService updateStoryById', () => {
-  test('create a new story', async () => {
+  test('update a story', async () => {
     jest.clearAllMocks();
 
     jest.spyOn(Story, 'update').mockImplementation((info, queryObject) => {
