@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const Story = require('../models/storyModel');
-const AppError = require('../utils/AppError');
+const throwError = require('../utils/throwError');
 
 // STORY SERVICES
 exports.findAllStories = async () => await Story.findAll({ raw: true });
@@ -9,7 +9,7 @@ exports.findStoryById = async (id) => {
   const story = await Story.findOne({ where: { id }, raw: true });
 
   if (!story) {
-    throw new AppError('No story found with that ID', 404);
+    throwError.storyNotFound();
   }
 
   return story;
@@ -31,10 +31,10 @@ exports.isSameAuthor = async (id, username) => {
   const story = await Story.findOne({ where: { id }, raw: true });
 
   if (!story) {
-    throw new AppError('No story found with that ID', 404);
+    throwError.storyNotFound();
   }
 
-  if (story.author !== username) {
-    throw new AppError('You do not have permission!', 403);
+  if (story && story.author !== username) {
+    throwError.doNotHavePermission();
   }
 };
