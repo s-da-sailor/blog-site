@@ -7,7 +7,7 @@
 const express = require('express');
 require('./utils/setConfig');
 const db = require('./database');
-const globalErrorHandler = require('./controllers/errorController');
+const globalErrorHandlingMiddleware = require('./middlewares/globalErrorHandlingMiddleware');
 const unhandledRouteHandler = require('./utils/unhandledRouteHandler');
 const storyRouter = require('./routes/storyRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -27,7 +27,7 @@ app.use('/api/v1/users', userRouter);
 app.all('*', unhandledRouteHandler);
 
 // GLOBAL ERROR HANDLER
-app.use(globalErrorHandler);
+app.use(globalErrorHandlingMiddleware);
 
 // EXPORT
 module.exports = app;
