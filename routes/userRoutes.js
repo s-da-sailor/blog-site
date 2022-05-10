@@ -2,6 +2,7 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
+const routeProtectionMiddleware = require('../middlewares/routeProtectionMiddleware');
 
 // USER ROUTER
 const router = express.Router();
@@ -15,9 +16,9 @@ router.route('/').get(userController.getAllUsers);
 router
   .route('/:username')
   .get(userController.getUser)
-  .patch(authController.protect, userController.updateUserPatch)
-  .put(authController.protect, userController.updateUserPut)
-  .delete(authController.protect, userController.deleteUser);
+  .patch(routeProtectionMiddleware.protect, userController.updateUserPatch)
+  .put(routeProtectionMiddleware.protect, userController.updateUserPut)
+  .delete(routeProtectionMiddleware.protect, userController.deleteUser);
 
 // EXPORT
 module.exports = router;
