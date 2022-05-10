@@ -4,15 +4,15 @@ const jsonToPlainText = require('json-to-plain-text');
 const json2html = require('json-to-html');
 
 // DATA CONVERSION METHODS
-const jsToXml = (data) => {
+exports.jsToXml = (data) => {
   const xmlToJsBuilder = new xml2js.Builder();
   return xmlToJsBuilder.buildObject(data);
 };
 
-const jsonToTextPlain = (data) =>
+exports.jsonToTextPlain = (data) =>
   jsonToPlainText.toPlainText(JSON.parse(JSON.stringify(data)));
 
-const jsonToHTML = (data) => json2html(JSON.parse(JSON.stringify(data)));
+exports.jsonToHTML = (data) => json2html(JSON.parse(JSON.stringify(data)));
 
 // CONTENT NEGOTIATION METHOD
 exports.serveData = function (data, statusCode, req, res, next) {
@@ -25,13 +25,13 @@ exports.serveData = function (data, statusCode, req, res, next) {
   dataToServe.data = dataField;
 
   if (req.headers.accept && req.headers.accept === 'application/xml') {
-    dataToServe = jsToXml(dataToServe);
+    dataToServe = exports.jsToXml(dataToServe);
     res.setHeader('Content-Type', 'application/xml'); // to XML
   } else if (req.headers.accept && req.headers.accept === 'text/plain') {
-    dataToServe = jsonToTextPlain(dataToServe);
+    dataToServe = exports.jsonToTextPlain(dataToServe);
     res.setHeader('Content-Type', 'text/plain'); // to plain text
   } else if (req.headers.accept && req.headers.accept === 'text/html') {
-    dataToServe = jsonToHTML(dataToServe); // to HTML
+    dataToServe = exports.jsonToHTML(dataToServe); // to HTML
     res.setHeader('Content-Type', 'text/html');
   } else {
     res.setHeader('Content-Type', 'application/json');
