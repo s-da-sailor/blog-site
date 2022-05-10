@@ -15,16 +15,6 @@ exports.findUserByUsername = async (username) => {
   return user;
 };
 
-exports.findUserByUsernameInstance = async (username) => {
-  const user = await User.findOne({ where: { username } });
-
-  if (!user) {
-    throw new AppError('No user found with that username', 404);
-  }
-
-  return user;
-};
-
 exports.findUserByUsernameWithPassword = async (username) => {
   const user = await User.scope('withPassword').findOne({
     where: { username },
