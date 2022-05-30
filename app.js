@@ -6,6 +6,7 @@
 // DEPENDENCIES
 const express = require('express');
 require('./utils/setConfig');
+const cors = require('cors');
 const db = require('./database');
 const globalErrorHandlingMiddleware = require('./middlewares/globalErrorHandlingMiddleware');
 const unhandledRouteHandler = require('./utils/unhandledRouteHandler');
@@ -18,7 +19,15 @@ db.connect();
 // APPLICATION
 const app = express();
 
+// CORS OPTIONS
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  optionsOnSuccess: 200,
+};
+
 // MIDDLEWARES
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/api/v1/stories', storyRouter);
 app.use('/api/v1/users', userRouter);

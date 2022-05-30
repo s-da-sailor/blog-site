@@ -66,3 +66,11 @@ exports.login = catchAsync(async (req, res, next) => {
   // 3. Send token to client
   exports.createAndSendToken(user.dataValues, 200, req, res, next);
 });
+
+exports.logout = catchAsync(async (req, res, next) => {
+  contentNegotiation.serveData(null, 204, req, res, next);
+});
+
+exports.verify = catchAsync(async (req, res, next) => {
+  contentNegotiation.serveData(req.user, 200, req, res, next);
+});
