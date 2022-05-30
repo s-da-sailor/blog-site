@@ -19,6 +19,7 @@
   "homepage": "https://github.com/s-da-sailor/blog-site#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "eslint-plugin-jest": "^26.1.5",
     "express": "^4.17.3",
