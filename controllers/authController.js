@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const jwt = require('jsonwebtoken');
+const base64 = require('base-64');
 const userService = require('../services/userService');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
@@ -21,9 +22,9 @@ exports.createAndSendToken = (user, statusCode, req, res, next) => {
   };
   //if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-  res.cookie('jwt', token, cookieOptions);
+  res.cookie('jwt', base64.encode(token), cookieOptions);
 
-  user.token = token;
+  user.token = base64.encode(token);
 
   contentNegotiation.serveData(user, 200, req, res, next);
 };
@@ -34,8 +35,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     username,
     name,
     email,
-    password,
-    passwordConfirm,
+    password: base64.decode(password),
+    passwordConfirm: base64.decode(passwordConfirm),
   });
 
   delete newUser.dataValues.password;
@@ -45,12 +46,15 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { username, password } = req.body;
+  const { username } = req.body;
+  let { password } = req.body;
 
   // 1. Check if username and password exist in req body
   if (!username || !password) {
     return next(new AppError('Please provide username and password', 400));
   }
+
+  password = base64.decode(password);
 
   // 2. Check if user exists in DB and password is correct
   const user = await userService.findUserByUsernameWithPassword(username);

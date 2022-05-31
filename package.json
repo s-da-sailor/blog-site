@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/s-da-sailor/blog-site#readme",
   "dependencies": {
+    "base-64": "^1.0.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
