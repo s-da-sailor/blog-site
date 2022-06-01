@@ -3,7 +3,8 @@ const Story = require('../models/storyModel');
 const throwError = require('../utils/throwError');
 
 // STORY SERVICES
-exports.findAllStories = async () => await Story.findAll({ raw: true });
+exports.findAllStories = async () =>
+  await Story.findAll({ order: [['id', 'DESC']], raw: true });
 
 exports.findStoryById = async (id) => {
   const story = await Story.findOne({ where: { id }, raw: true });
