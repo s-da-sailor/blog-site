@@ -39,3 +39,10 @@ exports.isSameAuthor = async (id, username) => {
     throwError.doNotHavePermission();
   }
 };
+
+exports.findUserSpecificStories = async (username) =>
+  await Story.findAll({
+    where: { author: username },
+    order: [['id', 'DESC']],
+    raw: true,
+  });

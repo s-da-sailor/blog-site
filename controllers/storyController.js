@@ -74,3 +74,11 @@ exports.deleteStory = catchAsync(async (req, res, next) => {
 
   contentNegotiation.serveData(null, 204, req, res, next);
 });
+
+exports.getUserSpecificStories = catchAsync(async (req, res, next) => {
+  const stories = await storyService.findUserSpecificStories(
+    req.params.username
+  );
+
+  contentNegotiation.serveData(stories, 200, req, res, next);
+});
