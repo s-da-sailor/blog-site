@@ -2,6 +2,7 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
+const storyController = require('../controllers/storyController');
 const routeProtectionMiddleware = require('../middlewares/routeProtectionMiddleware');
 
 // USER ROUTER
@@ -25,6 +26,8 @@ router
   .patch(routeProtectionMiddleware.protect, userController.updateUserPatch)
   .put(routeProtectionMiddleware.protect, userController.updateUserPut)
   .delete(routeProtectionMiddleware.protect, userController.deleteUser);
+
+router.route('/:username/stories').get(storyController.getUserSpecificStories);
 
 // EXPORT
 module.exports = router;
