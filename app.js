@@ -7,6 +7,7 @@
 const express = require('express');
 require('./utils/setConfig');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const db = require('./database');
 const globalErrorHandlingMiddleware = require('./middlewares/globalErrorHandlingMiddleware');
 const unhandledRouteHandler = require('./utils/unhandledRouteHandler');
@@ -30,6 +31,7 @@ const corsOptions = {
 // MIDDLEWARES
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 app.use('/api/v1/stories', storyRouter);
 app.use('/api/v1/users', userRouter);
 

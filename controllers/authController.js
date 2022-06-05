@@ -25,8 +25,6 @@ exports.createAndSendToken = (user, statusCode, req, res, next) => {
   res.clearCookie('jwt');
   res.cookie('jwt', token, cookieOptions);
 
-  user.token = token;
-
   contentNegotiation.serveData(user, 200, req, res, next);
 };
 
