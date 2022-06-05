@@ -7,7 +7,7 @@ const User = require('../models/userModel');
 // For getting access to the protected routes
 exports.protect = catchAsync(async (req, res, next) => {
   // 1. If token exists
-  const token = req.cookies.jwt || null;
+  const token = req.cookies.jabcookie || null;
 
   if (!token) {
     return next(

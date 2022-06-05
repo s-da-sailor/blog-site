@@ -6,19 +6,10 @@ const User = require('../models/userModel');
 // Verify token
 exports.verify = catchAsync(async (req, res, next) => {
   // 1. If token exists
-  // let token;
-  // if (
-  //   req.headers.authorization &&
-  //   req.headers.authorization.startsWith('Bearer')
-  // ) {
-  //   // eslint-disable-next-line prefer-destructuring
-  //   token = req.headers.authorization.split(' ')[1];
-  // }
-
-  const token = req.cookies.jwt;
+  const token = req.cookies.jabcookie;
 
   if (!token) {
-    res.clearCookie('jwt');
+    res.clearCookie('jabcookie');
     return next();
   }
 
@@ -31,13 +22,13 @@ exports.verify = catchAsync(async (req, res, next) => {
   });
 
   if (!freshUser) {
-    res.clearCookie('jwt');
+    res.clearCookie('jabcookie');
     return next();
   }
 
   // 4. If user changed password after the token was issued
   if (freshUser.changedPasswordAfter(decoded.iat)) {
-    res.clearCookie('jwt');
+    res.clearCookie('jabcookie');
     return next();
   }
 

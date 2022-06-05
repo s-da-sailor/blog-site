@@ -76,7 +76,7 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 
   await userService.deleteUserByUsername(req.params.username);
 
-  res.clearCookie('jwt');
+  res.clearCookie('jabcookie');
 
   contentNegotiation.serveData(null, 204, req, res, next);
 });
