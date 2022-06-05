@@ -22,8 +22,8 @@ exports.createAndSendToken = (user, statusCode, req, res, next) => {
   };
   //if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-  res.clearCookie('jwt');
-  res.cookie('jwt', token, cookieOptions);
+  res.clearCookie('jabcookie');
+  res.cookie('jabcookie', token, cookieOptions);
 
   contentNegotiation.serveData(user, 200, req, res, next);
 };
@@ -68,7 +68,7 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = catchAsync(async (req, res, next) => {
-  res.clearCookie('jwt');
+  res.clearCookie('jabcookie');
   contentNegotiation.serveData(null, 204, req, res, next);
 });
 
