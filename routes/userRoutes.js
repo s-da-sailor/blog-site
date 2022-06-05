@@ -4,6 +4,7 @@ const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 const storyController = require('../controllers/storyController');
 const routeProtectionMiddleware = require('../middlewares/routeProtectionMiddleware');
+const verificationMiddleware = require('../middlewares/verificationMiddleware');
 
 // USER ROUTER
 const router = express.Router();
@@ -12,11 +13,7 @@ const router = express.Router();
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
-router.post(
-  '/verify',
-  routeProtectionMiddleware.protect,
-  authController.verify
-);
+router.post('/verify', verificationMiddleware.verify, authController.verify);
 
 router.route('/').get(userController.getAllUsers);
 
