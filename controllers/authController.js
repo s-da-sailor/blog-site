@@ -18,9 +18,11 @@ exports.createAndSendToken = (user, statusCode, req, res, next) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
+    sameSite: 'strict',
   };
   //if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
+  res.clearCookie('jwt');
   res.cookie('jwt', token, cookieOptions);
 
   user.token = token;
@@ -68,9 +70,11 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = catchAsync(async (req, res, next) => {
+  res.clearCookie('jwt');
   contentNegotiation.serveData(null, 204, req, res, next);
 });
 
 exports.verify = catchAsync(async (req, res, next) => {
-  contentNegotiation.serveData(req.user, 200, req, res, next);
+  if (req.user) contentNegotiation.serveData(req.user, 200, req, res, next);
+  else contentNegotiation.serveData(null, 200, req, res, next);
 });
