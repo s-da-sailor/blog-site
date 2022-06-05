@@ -7,14 +7,7 @@ const User = require('../models/userModel');
 // For getting access to the protected routes
 exports.protect = catchAsync(async (req, res, next) => {
   // 1. If token exists
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    // eslint-disable-next-line prefer-destructuring
-    token = req.headers.authorization.split(' ')[1];
-  }
+  const token = req.cookies.jwt || null;
 
   if (!token) {
     return next(
