@@ -1,4 +1,5 @@
 // DEPENDENCIES
+const { Op } = require('sequelize');
 const User = require('../models/userModel');
 const throwError = require('../utils/throwError');
 
@@ -53,4 +54,14 @@ exports.isSameUser = async (id, username) => {
 
 exports.correctPassword = async function (candidatePassword, userPassword) {
   return await User.prototype.correctPassword(candidatePassword, userPassword);
+};
+
+exports.searchUser = async function (searchParam) {
+  return await User.findAll({
+    where: {
+      username: {
+        [Op.like]: `%${searchParam}%`,
+      },
+    },
+  });
 };

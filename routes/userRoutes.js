@@ -14,6 +14,7 @@ router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 router.post('/verify', verificationMiddleware.verify, authController.verify);
+router.post('/search', userController.searchUser);
 
 router.route('/').get(userController.getAllUsers);
 
