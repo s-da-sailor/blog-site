@@ -80,3 +80,9 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 
   contentNegotiation.serveData(null, 204, req, res, next);
 });
+
+exports.searchUser = catchAsync(async (req, res, next) => {
+  const users = await userService.searchUser(req.body.query);
+
+  contentNegotiation.serveData(users, 200, req, res, next);
+});
