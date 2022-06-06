@@ -81,9 +81,11 @@ module.exports = (err, req, res, next) => {
       error = handleValidationError(error);
     }
     if (error.name === 'JsonWebTokenError') {
+      res.clearCookie('jabcookie');
       error = handleJWTError(error);
     }
     if (error.name === 'TokenExpiredError') {
+      res.clearCookie('jabcookie');
       error = handleJWTExpiredError(error);
     }
 
