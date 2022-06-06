@@ -1,12 +1,11 @@
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
-const catchAsync = require('../utils/catchAsync');
 const User = require('../models/userModel');
 
 // Verify token
-exports.verify = catchAsync(async (req, res, next) => {
+exports.verify = async (req, res, next) => {
   // 1. If token exists
-  const token = req.cookies.jabcookie;
+  const token = req.cookies.jabcookie || null;
 
   if (!token) {
     res.clearCookie('jabcookie');
@@ -14,12 +13,24 @@ exports.verify = catchAsync(async (req, res, next) => {
   }
 
   // 2. Verify token
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  let decoded;
+  try {
+    decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  } catch (err) {
+    res.clearCookie('jabcookie');
+    return next();
+  }
 
   // 3. Check if user still exists
-  const freshUser = await User.findOne({
-    where: { username: decoded.username },
-  });
+  let freshUser;
+  try {
+    freshUser = await User.findOne({
+      where: { username: decoded.username },
+    });
+  } catch (err) {
+    res.clearCookie('jabcookie');
+    return next();
+  }
 
   if (!freshUser) {
     res.clearCookie('jabcookie');
@@ -36,4 +47,4 @@ exports.verify = catchAsync(async (req, res, next) => {
   req.user = freshUser.dataValues;
 
   next();
-});
+};

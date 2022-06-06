@@ -28,8 +28,8 @@ const User = db.define(
           msg: 'Username must be between 1 and 30 characters',
         },
         is: {
-          args: [/([A-Za-z.0-9\-_]+)/],
-          msg: 'Only letters, numbers, underscores, periods and dashes are allowed in username',
+          args: /^[a-z0-9]+$/i,
+          msg: 'Only letters and numbers are allowed in username',
         },
       },
     },
