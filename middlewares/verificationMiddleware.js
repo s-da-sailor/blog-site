@@ -8,7 +8,16 @@ exports.verify = async (req, res, next) => {
   const token = req.cookies.jabcookie || null;
 
   if (!token) {
+    const cookieOptions = {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    };
     res.clearCookie('jabcookie');
+    res.cookie('jabcookie', '', cookieOptions);
     return next();
   }
 
@@ -17,7 +26,16 @@ exports.verify = async (req, res, next) => {
   try {
     decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   } catch (err) {
+    const cookieOptions = {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    };
     res.clearCookie('jabcookie');
+    res.cookie('jabcookie', '', cookieOptions);
     return next();
   }
 
@@ -28,18 +46,45 @@ exports.verify = async (req, res, next) => {
       where: { username: decoded.username },
     });
   } catch (err) {
+    const cookieOptions = {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    };
     res.clearCookie('jabcookie');
+    res.cookie('jabcookie', '', cookieOptions);
     return next();
   }
 
   if (!freshUser) {
+    const cookieOptions = {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    };
     res.clearCookie('jabcookie');
+    res.cookie('jabcookie', '', cookieOptions);
     return next();
   }
 
   // 4. If user changed password after the token was issued
   if (freshUser.changedPasswordAfter(decoded.iat)) {
+    const cookieOptions = {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    };
     res.clearCookie('jabcookie');
+    res.cookie('jabcookie', '', cookieOptions);
     return next();
   }
 
