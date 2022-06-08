@@ -2,16 +2,18 @@
 const Sequelize = require('sequelize');
 
 // DATABASE
-const database = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USERNAME,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    dialect: 'mysql',
-    logging: false,
-  }
-);
+
+const dbName = process.env.DB_NAME || 'blog_site';
+const dbUser = process.env.DB_USERNAME || 'root';
+const password = process.env.DB_PASSWORD || '';
+const host = process.env.DB_HOST || 'localhost';
+
+const database = new Sequelize(dbName, dbUser, password, {
+  host: host,
+  port: 3306,
+  dialect: 'mysql',
+  logging: false,
+});
 
 // DB CONNECT
 database.connect = async () => {
