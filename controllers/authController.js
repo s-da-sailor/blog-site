@@ -69,7 +69,16 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = catchAsync(async (req, res, next) => {
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+  };
   res.clearCookie('jabcookie');
+  res.cookie('jabcookie', '', cookieOptions);
   contentNegotiation.serveData(null, 204, req, res, next);
 });
 
