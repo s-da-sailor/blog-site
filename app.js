@@ -22,7 +22,7 @@ const app = express();
 
 // CORS OPTIONS
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'https://just-another-blogsite.netlify.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   optionsOnSuccess: 200,
