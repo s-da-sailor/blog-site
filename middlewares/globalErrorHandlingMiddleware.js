@@ -1,5 +1,5 @@
 // DEPENDENCIES
-const AppError = require('./../utils/AppError');
+const AppError = require('./../utils/AppError.js');
 
 const handleUniqueConstraintError = (err) => {
   const message = `Invalid input data. ${err.errors[0].message}`;
