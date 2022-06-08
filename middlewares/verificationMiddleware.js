@@ -16,6 +16,7 @@ exports.verify = async (req, res, next) => {
       sameSite: 'none',
       secure: true,
     };
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
     res.clearCookie('jabcookie');
     res.cookie('jabcookie', '', cookieOptions);
     return next();
@@ -34,6 +35,7 @@ exports.verify = async (req, res, next) => {
       sameSite: 'none',
       secure: true,
     };
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
     res.clearCookie('jabcookie');
     res.cookie('jabcookie', '', cookieOptions);
     return next();
@@ -54,6 +56,7 @@ exports.verify = async (req, res, next) => {
       sameSite: 'none',
       secure: true,
     };
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
     res.clearCookie('jabcookie');
     res.cookie('jabcookie', '', cookieOptions);
     return next();
@@ -68,6 +71,7 @@ exports.verify = async (req, res, next) => {
       sameSite: 'none',
       secure: true,
     };
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
     res.clearCookie('jabcookie');
     res.cookie('jabcookie', '', cookieOptions);
     return next();
@@ -83,6 +87,7 @@ exports.verify = async (req, res, next) => {
       sameSite: 'none',
       secure: true,
     };
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
     res.clearCookie('jabcookie');
     res.cookie('jabcookie', '', cookieOptions);
     return next();
