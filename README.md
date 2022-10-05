@@ -10,60 +10,60 @@ A RestAPI implementation of a blog site that supports authentication and authori
 
   **_/api/v1/stories_**
 
-      Supported Methods:
-                              GET
-                              POST
+      Supported Methods and Functionalities:
+                              GET (Get all stories)
+                              POST (Post a story)
 
   **_/api/v1/stories/:id_**
 
-      Supported Methods:
-                              GET
-                              PATCH
-                              PUT
-                              DELETE
+      Supported Methods and Functionalities:
+                              GET (Get a specific story)
+                              PATCH (Update a story with partial payload)
+                              PUT (Update a story with full payload)
+                              DELETE (Delete a story)
 
   **_/api/v1/users_**
 
-      Supported Methods:
-                              GET
+      Supported Methods and Functionalities:
+                              GET (Get all users)
 
   **_/api/v1/users/signup_**
 
-      Supported Methods:
-                              POST
+      Supported Methods and Functionalities:
+                              POST (User signup)
 
   **_/api/v1/users/login_**
 
-      Supported Methods:
-                              POST
+      Supported Methods and Functionalities:
+                              POST (User login)
 
   **_/api/v1/users/logout_**
 
-      Supported Methods:
-                              POST
+      Supported Methods and Functionalities:
+                              POST (User logout)
 
   **_/api/v1/users/verify_**
 
-      Supported Methods:
-                              POST
+      Supported Methods and Functionalities:
+                              POST (Verify if a user is logged in)
 
   **_/api/v1/users/search_**
 
-      Supported Methods:
-                              POST
+      Supported Methods and Functionalities:
+                              POST (User search with a search parameter)
 
   **_/api/v1/users/:username_**
 
-      Supported Methods:
-                              GET
-                              PATCH
-                              PUT
-                              DELETE
+      Supported Methods and Functionalities:
+                              GET (Get a specific user)
+                              PATCH (Update a user with partial payload)
+                              PUT (Update a user with full payload)
+                              DELETE (Delete a user)
 
   **_/api/v1/users/:username/stories_**
 
-      Supported Methods:
-                              GET
+      Supported Methods and Functionalities:
+                              GET (Get user specific stories)
 
 - **Types of Contents Served**
 
